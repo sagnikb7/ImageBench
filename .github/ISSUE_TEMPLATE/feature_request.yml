@@ -1,0 +1,34 @@
+name: Feature request
+description: Propose a focused improvement aligned with ImageBench's offline, native direction.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe the workflow problem before proposing a solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed experience
+      description: Explain the native macOS interaction and expected result.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Project constraints
+      options:
+        - label: This can preserve offline operation and user privacy.
+          required: true
+        - label: This does not require silently overwriting source or output files.
+          required: true
+        - label: I reviewed the current roadmap for overlapping work.
+          required: true

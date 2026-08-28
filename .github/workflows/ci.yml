@@ -1,0 +1,58 @@
+name: ImageBench CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: imagebench-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            architecture: arm64
+          - runner: macos-15-intel
+            architecture: x86_64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - name: Report toolchain
+        run: swift --version && xcodebuild -version
+      - name: Install CMake
+        run: brew install cmake
+      - name: Fetch pinned offline dependencies
+        run: Scripts/fetch-dependencies.sh
+      - name: Check source style
+        run: Scripts/lint.sh
+      - name: Run debug tests
+        run: swift test --disable-sandbox
+      - name: Run optimized tests
+        run: swift test -c release --disable-sandbox
+      - name: Package offline app
+        run: Scripts/package-app.sh
+      - name: Smoke-test app bundle
+        run: Scripts/smoke-test-app.sh
+      - name: Archive app bundle
+        id: archive
+        run: |
+          VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Packaging/Info.plist)
+          ARTIFACT_NAME="ImageBench-${VERSION}-macos-${{ matrix.architecture }}"
+          ditto -c -k --sequesterRsrc --keepParent dist/ImageBench.app "dist/${ARTIFACT_NAME}.zip"
+          echo "artifact_name=${ARTIFACT_NAME}" >> "$GITHUB_OUTPUT"
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.archive.outputs.artifact_name }}
+          path: dist/${{ steps.archive.outputs.artifact_name }}.zip
+          if-no-files-found: error
+          retention-days: 14

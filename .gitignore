@@ -1,0 +1,40 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# Xcode user and build state
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+
+# Packaged applications and fetched binaries
+dist/
+Vendor/Tools/
+
+# Local benchmark, coverage, and test output
+*.profraw
+*.profdata
+coverage/
+TestResults/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.p8
+*.p12
+*.cer
+*.mobileprovision
+
+# Editor state
+.idea/
+*.swp
+*~
