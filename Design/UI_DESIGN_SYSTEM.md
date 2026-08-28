@@ -97,7 +97,7 @@ Rules:
 
 ## Typography
 
-Use San Francisco through SwiftUI semantic styles. Do not bundle a display font unless a future brand review explicitly approves it. The sidebar product wordmark is the one expressive exception: it uses the native rounded system design, tight tracking, and a coral italic “Bench” accent while retaining “ImageBench” as one accessibility label.
+Use San Francisco through SwiftUI semantic styles for task and control typography. The explicitly approved sidebar product wordmark is the one display-font exception: it uses the bundled Archivo Narrow variable font at bold weight, compact tracking, and a short coral underscore while retaining “ImageBench” as one accessibility label. The font is registered from the app bundle and must never require a network request or a system installation.
 
 | Purpose | Style |
 | --- | --- |
@@ -186,7 +186,7 @@ Do not place a divider beneath the header. Its title, subtitle, and bottom spaci
 
 ### `BrandWordmark`
 
-Use only for the persistent ImageBench identity in the sidebar. It may be more expressive than task typography, but it must stay within the native San Francisco family, expose the product name as one accessibility label, and keep coral as an identity accent rather than an action color.
+Use only for the persistent ImageBench identity in the sidebar. It uses bold Archivo Narrow in the primary text color with one coral underscore, exposes the product name as one accessibility label, and keeps coral as an identity accent rather than an action color. If registration fails, SwiftUI may fall back to a system face without preventing the app from launching.
 
 Pair it with the flat coral `SidebarBrandMark`. The same white photo-stack on coral artwork is used for the macOS app icon and About identity so the product has one recognizable mark at every scale. The sidebar uses an opaque `PFTheme.canvas` background and one semantic hairline divider; it must not use a material-backed split-view column, baked icon shadows, or resting elevation against the flat workspace.
 
@@ -357,13 +357,14 @@ Voice is calm, direct, and specific.
 - Keep direct drag placement on the preview as the primary spatial control; provide clear text guidance and a keyboard-friendly Center action.
 - Keep a persistent, high-contrast coral dashed selection outline around the editable watermark while a preview is present; draw it inside the watermark bounds and never include it in exports.
 - Show exactly four compact preset slots with distinct selected and saved/empty states.
-- On the first Watermark Studio load, select slot 1 and apply it when saved. Selecting an empty slot resets the editor to a blank text watermark with default size, opacity, color, and placement.
+- On the first Watermark Studio load, select slot 1 and apply it when saved. Selecting an empty slot resets the editor to a text watermark prefilled with an editable `©` symbol plus the default size, opacity, color, and placement.
 - When a saved image preset is selected, its managed asset load owns the preview until it finishes. Cancel or invalidate older editor-reset preview work so a late clean-slate refresh cannot clear the restored signature.
 - Explain that export updates the selected preset so persistence is predictable.
 - Text and image watermark modes share size, opacity, and placement controls.
 - The editor-only dashed selection outline must never appear in exported pixels.
 - Use relative percentage sizing and placement so saved presets remain meaningful across different source dimensions.
 - Use Arial for text-watermark editing, preview, and export so the visible editor and rendered output remain consistent.
+- Keep enough inset around the text field for the native keyboard-focus halo to render without clipping inside the scrollable inspector.
 - Place destructive preset reset actions below the preset choices, require confirmation, and distinguish resetting the selected slot from resetting all four slots.
 
 ### EXIF Viewer
@@ -447,6 +448,7 @@ Do not:
 - **2026-08-28 — Unified product mark and generous utility targets:** the flat coral photo-stack mark now identifies the sidebar, Dock, and About surface; sheet close buttons use a padded circular target, and the compressor technical disclosure toggles from its full header row.
 - **2026-08-28 — Single module-icon location:** module icons remain in sidebar navigation and are omitted from workspace headers, leaving titles and subtitles to establish each screen's hierarchy without repetition.
 - **2026-08-28 — EXIF information architecture:** the read-only EXIF Viewer uses the shared Preview/Inspector workspace, bounds histogram work, groups metadata by photographic intent, and treats installed macOS RAW codecs as the explicit capability boundary.
+- **2026-08-28 — Condensed editorial wordmark:** the approved option-2 identity replaces the rounded coral-split lettering with bundled bold Archivo Narrow, primary-color lettering, compact tracking, and one coral underscore. All module and control typography remains native San Francisco.
 - **2026-08-28 — Preference and preset ownership:** Settings owns durable startup preferences and global preset cleanup; Watermark Studio retains selected-slot reset beside the preset editor. Both destructive paths require confirmation.
 
 Future design decisions should be appended here when they change a cross-screen rule. Screen-specific implementation notes belong beside the relevant view, not in this system document.

@@ -210,6 +210,7 @@ Test groups:
 - `CompressionLogBufferTests`: exact ordering, empty updates, and buffer reuse
 - `CompressorIntegrationTests`: real mozjpeg and ExifTool operations
 - `CompressorScaleTests`: a 1,200-file scan and an opt-in 200-image encode benchmark
+- `CompressorRealFolderTests`: an opt-in recursive end-to-end run against a contributor-selected private folder, using disposable output
 - `CompressorBattleTests`: mixed-format folders, unrelated files, corrupt inputs, nested output exclusion, Unicode/quoted paths, duplicate stems, and uppercase HEIC/HEIF
 - `CompressorViewModelTests`: lazy output selection and explicit-destination preservation
 - `ProcessRunnerTests`: output, errors, stress, cancellation, reuse
@@ -258,6 +259,14 @@ Run scale benchmarks explicitly so routine test runs remain fast:
 ```sh
 Scripts/run-benchmarks.sh
 ```
+
+Run the complete compressor pipeline against a local folder without modifying its contents:
+
+```sh
+IMAGEBENCH_REAL_FOLDER="/path/to/images" swift test --disable-sandbox --filter CompressorRealFolderTests
+```
+
+The diagnostic recursively discovers supported images, uses the Web Optimized preset with metadata preservation, writes to an isolated temporary output folder, and removes that output when the test finishes. It remains skipped during routine and CI runs.
 
 Core Image needs normal macOS rendering access for pixel assertions. A restrictive outer automation sandbox may return transparent black frames even though SwiftPM's own sandbox is disabled. Confirm failures in a normal Terminal or Xcode environment.
 

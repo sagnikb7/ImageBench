@@ -5,6 +5,20 @@ import XCTest
 
 @MainActor
 final class WatermarkViewModelTests: XCTestCase {
+    func testCleanSlatePrefillsRemovableCopyrightSymbol() throws {
+        let temp = try TemporaryDirectory()
+        let store = WatermarkPresetStore(rootDirectory: temp.url)
+        let model = WatermarkViewModel(presetStore: store)
+        model.input = URL(fileURLWithPath: "/tmp/photo.png")
+
+        XCTAssertEqual(model.draft.text, "© ")
+        XCTAssertTrue(model.canExport)
+
+        model.draft.text = ""
+
+        XCTAssertFalse(model.canExport)
+    }
+
     func testLoadPresetsSelectsAndAppliesSavedSlotOne() async throws {
         let temp = try TemporaryDirectory()
         let store = WatermarkPresetStore(rootDirectory: temp.url)
@@ -43,10 +57,8 @@ final class WatermarkViewModelTests: XCTestCase {
 
         model.selectPreset(slot: 2)
 
-        var cleanSlate = WatermarkDraft()
-        cleanSlate.text = ""
         XCTAssertEqual(model.selectedSlot, 2)
-        XCTAssertEqual(model.draft, cleanSlate)
+        XCTAssertEqual(model.draft, .cleanSlate)
         XCTAssertNil(model.watermarkImageURL)
         XCTAssertNil(model.watermarkPreview)
         XCTAssertEqual(model.message, "Preset 2 is empty. Start fresh, then export to save it.")

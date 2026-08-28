@@ -10,7 +10,12 @@ Changes belong under **Unreleased** when they merge. A release moves those entri
 
 ### Changed
 
+- New and reset text-watermark drafts now begin with an editable `©` symbol that users can keep or remove.
+- Reworked the sidebar ImageBench wordmark with a condensed Archivo Narrow treatment and coral underscore, bundled locally under the SIL Open Font License.
+
 ### Fixed
+
+- Added clearance around the Watermark Studio text editor so its native keyboard-focus ring is no longer clipped by the inspector scroll area.
 
 ## 0.2.0 - 2026-08-28
 

@@ -4,6 +4,10 @@ import SwiftUI
 struct ImageBenchApp: App {
     @StateObject private var dependencies = DependencyManager()
 
+    init() {
+        BrandTypography.register()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()

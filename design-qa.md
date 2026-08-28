@@ -67,6 +67,10 @@ The packaged native app was inspected at its minimum supported workspace size in
 - `Audit/ExifViewer/02-generated-metadata-light.png`
 - `Audit/ExifViewer/03-settings.png`
 - `Audit/ExifViewer/04-watermark-reset-controls.png`
+- `Audit/WatermarkTextField/01-focus-ring-and-copyright-default.png`
+- `Audit/BrandWordmark/00-selected-option.png`
+- `Audit/BrandWordmark/01-archivo-narrow-implementation.png`
+- `Audit/BrandWordmark/02-reference-comparison.png`
 
 The reference comparison used `Design/QA/implementation-familiar-affordances-filler.jpg` and `Design/UI_DESIGN_SYSTEM.md`. Reference and release-candidate Filler captures were reviewed together at the same 1,230 × 768 viewport. The only structural change is the expected Watermark Studio navigation item; layout density, surfaces, typography, colors, and control placement remain aligned.
 
@@ -152,7 +156,7 @@ Populated Watermark, Splitter, and Filler previews use the same token behind the
 
 The shared line beneath module titles was removed across all five tools. The existing header inset and content spacing still establish the transition into task cards, while eliminating an edge-to-edge boundary that duplicated the cards’ own structure. The divider above the persistent action bar remains because it separates fixed controls from scrolling content.
 
-The sidebar brand now uses a dedicated native `BrandWordmark`: rounded San Francisco lettering, compact tracking, and a coral italic “Bench” accent. All task and control typography remains semantic San Francisco, and VoiceOver receives the single product name “ImageBench.”
+This 2026-08-27 pass introduced the first dedicated native `BrandWordmark` with rounded San Francisco lettering and a coral italic “Bench” accent. The approved 2026-08-28 option-2 refinement below supersedes its display treatment while retaining the same component boundary and accessibility label.
 
 Bulk Compressor result cards now show successful-input total Before, written-output total After, and the saved byte and percentage change. Failed and skipped files are excluded from both sides of the comparison. The layout adapts from a single row to a stacked result at narrower widths and exposes the complete comparison as one accessibility label.
 
@@ -171,6 +175,19 @@ The app shell now uses the same flat depth language as the workspace: an opaque 
 Selecting a saved image preset now cancels and invalidates any delayed preview refresh produced by the editor reset that precedes preset application. A generation check also prevents a late preset decode from replacing a newer explicit watermark choice. A slot-2 regression test recreates the SwiftUI text-reset callback and confirms that the managed signature image remains visible after the delayed work settles.
 
 ## Verification
+
+### Condensed editorial wordmark — 2026-08-28
+
+- The selected option-2 reference was translated into the native sidebar with locally bundled Archivo Narrow at a compact 23-point bold treatment, tight tracking, primary-color lettering, and one coral underscore.
+- The full product name remains one accessibility label; task, control, and module typography remains semantic San Francisco.
+- The font and its SIL Open Font License are present in the packaged app, register without a system installation, and require no runtime network access.
+- `Audit/BrandWordmark/02-reference-comparison.png` places the selected visual and the packaged implementation together. The shared condensed silhouette, adaptive primary-color wordmark, coral mark, and trailing coral accent pass the approved direction at the real sidebar scale in Dark appearance; no P0, P1, or P2 visual issues remain.
+
+### Watermark text-field focus and default — 2026-08-28
+
+- The scrollable inspector now reserves four points around its contents so the native blue keyboard-focus halo remains fully visible instead of being clipped at the text field boundary.
+- Selecting an empty preset in the packaged app preloads only `© `, leaves the insertion point after the symbol, and keeps the value fully editable and removable.
+- `Audit/WatermarkTextField/01-focus-ring-and-copyright-default.png` records the focused field and empty-preset default without changing or deleting the saved preset in slot 1.
 
 ### Attention-to-detail interaction pass — 2026-08-28
 
@@ -194,9 +211,10 @@ Selecting a saved image preset now cancels and invalidates any delayed preview r
 - Swift formatting and strict lint: passed.
 - Focused render/filler/watermark regression suite: 22 tests, zero failures.
 - Focused EXIF/watermark regression suite: 24 tests, zero failures.
-- Full debug suite: 104 tests executed, one opt-in benchmark skipped, zero failures.
-- Full optimized suite: 104 tests executed with normal macOS graphics access, one opt-in benchmark skipped, zero failures.
+- Full debug suite: 107 tests executed, two opt-in diagnostics skipped, zero failures.
+- Full optimized suite: 107 tests executed with normal macOS graphics access, two opt-in diagnostics skipped, zero failures.
 - Opt-in scale run: 200 images compressed successfully; 1,200 files scanned successfully.
+- Opt-in private-folder run: 337 recursively discovered screenshots (148.6 MB) compressed with metadata preservation, zero failures, zero skips, and disposable output cleanup in 383.5 seconds.
 - Mixed-folder battle tests: six image formats, non-image clutter, corrupt supported files, nested folders, Unicode/quoted names, duplicate stems, and uppercase HEIC/HEIF passed.
 - Final release app packaged successfully with bundled offline dependencies; signature/linkage checks and the real bundle smoke encode passed.
 - The four original tool empty-state captures passed visual comparison in both Light and Dark appearances. The new EXIF Viewer empty and generated-metadata states passed in Light without changing the user's saved appearance preference.

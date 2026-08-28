@@ -6,7 +6,7 @@ ImageBench is a native, offline-first image utility for macOS. It combines bulk 
 
 The project is designed around a simple trust model: source images are never modified, outputs are never silently overwritten, processing remains available offline, and the exact external commands are visible to the user.
 
-ImageBench now includes the Gallery Workbench interface: a modern native workspace with semantic light/dark styling, drag-and-drop, richer previews, durable result summaries, Settings, and About surfaces. The processing core, offline packaging, and 104-test suite remain the source of truth for behavior.
+ImageBench now includes the Gallery Workbench interface: a modern native workspace with semantic light/dark styling, drag-and-drop, richer previews, durable result summaries, Settings, and About surfaces. The processing core, offline packaging, and 107-test suite remain the source of truth for behavior.
 
 Current source release: **0.2.0 (build 2)**.
 
@@ -41,6 +41,7 @@ Current source release: **0.2.0 (build 2)**.
 - Uses normalized placement so the same preset adapts to different image dimensions
 - Provides four persistent preset slots that update after a successful export
 - Lets users reset the selected preset or all presets with confirmation
+- Starts new text watermarks with an editable `©` symbol that can be kept or removed
 - Renders text watermarks in Arial for consistent preview and export typography
 - Copies image-watermark assets into app-managed Application Support storage
 - Keeps presets working if the originally selected signature file is moved or deleted
@@ -114,7 +115,7 @@ Scripts/fetch-dependencies.sh
 
 ## Testing
 
-ImageBench currently has 104 XCTest cases covering:
+ImageBench currently has 107 XCTest cases covering:
 
 - preset-to-CLI contracts;
 - real mozjpeg JPEG encoding;
@@ -131,6 +132,7 @@ ImageBench currently has 104 XCTest cases covering:
 - EXIF grouping, popular RAW-extension recognition, histogram normalization, unsupported files, and watermark preset reset behavior;
 - corrupt files, atomic destination replacement, and source-overwrite protection;
 - mixed six-format folders, non-image clutter, corrupt supported files, Unicode and quoted names, duplicate stems, nested output exclusion, and uppercase HEIC/HEIF.
+- bundled Archivo Narrow registration and an opt-in disposable real-folder compression diagnostic.
 
 Run debug tests:
 
@@ -266,4 +268,4 @@ The native Gallery Workbench redesign is implemented. The next release work is t
 
 ## License
 
-ImageBench is open source under the [MIT License](LICENSE). Bundled mozjpeg and ExifTool components retain their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+ImageBench is open source under the [MIT License](LICENSE). Bundled Archivo Narrow, mozjpeg, and ExifTool components retain their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

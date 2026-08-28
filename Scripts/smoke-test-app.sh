@@ -12,7 +12,7 @@ WORK_DIR="$(mktemp -d /tmp/imagebench-smoke.XXXXXX)"
 cleanup() { rm -rf "$WORK_DIR"; }
 trap cleanup EXIT
 
-for required in "$CONTENTS/Info.plist" "$CONTENTS/MacOS/ImageBench" "$CJPEG" "$EXIFTOOL" "$CONTENTS/Resources/AppIcon.icns" "$CONTENTS/Resources/Assets.car" "$CONTENTS/Resources/LICENSE" "$CONTENTS/Resources/ThirdPartyNotices.md" "$CONTENTS/Resources/Licenses/mozjpeg-LICENSE.md" "$CONTENTS/Resources/Licenses/exiftool-README"; do
+for required in "$CONTENTS/Info.plist" "$CONTENTS/MacOS/ImageBench" "$CJPEG" "$EXIFTOOL" "$CONTENTS/Resources/AppIcon.icns" "$CONTENTS/Resources/Assets.car" "$CONTENTS/Resources/LICENSE" "$CONTENTS/Resources/ThirdPartyNotices.md" "$CONTENTS/Resources/Licenses/mozjpeg-LICENSE.md" "$CONTENTS/Resources/Licenses/exiftool-README" "$CONTENTS/Resources/Licenses/ArchivoNarrow-OFL.txt" "$CONTENTS/Resources/ImageBench_ImageBench.bundle/ArchivoNarrow[wght].ttf"; do
     [[ -e "$required" ]] || { print -u2 "Missing bundle component: $required"; exit 1; }
 done
 

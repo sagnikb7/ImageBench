@@ -1,6 +1,18 @@
 # Third-Party Notices
 
-ImageBench bundles the following command-line tools in release applications. They run locally and are not contacted as network services.
+ImageBench bundles the following third-party components in release applications. They run locally and are not contacted as network services.
+
+## Archivo Narrow
+
+The ImageBench wordmark uses Archivo Narrow by Omnibus-Type. The font is distributed under the SIL Open Font License, Version 1.1.
+
+The app bundles the variable upright font and includes the complete license at `ImageBench.app/Contents/Resources/Licenses/ArchivoNarrow-OFL.txt`.
+
+Upstream: https://github.com/Omnibus-Type/ArchivoNarrow
+
+Pinned upstream commit: `9793ec77b6682a26bc7a6ed523ca65cc3cb90aec`
+
+Bundled font SHA-256: `adbe027f625c8393ae0f6e174e32e233dda485bc3eda5153ce428275394ef97f`
 
 ## mozjpeg 4.1.5
 

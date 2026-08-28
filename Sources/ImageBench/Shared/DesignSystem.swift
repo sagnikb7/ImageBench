@@ -110,13 +110,14 @@ struct ToolHeader: View {
 /// Gives the product a distinct identity while keeping task typography native and quiet.
 struct BrandWordmark: View {
     var body: some View {
-        (Text("Image").fontWeight(.heavy)
-            + Text("Bench")
-            .fontWeight(.bold)
-            .italic()
+        (Text("ImageBench")
+            .foregroundColor(.primary)
+            + Text("_")
+            .font(BrandTypography.wordmarkFont)
             .foregroundColor(PFTheme.coral))
-            .font(.system(.title2, design: .rounded))
-            .tracking(-0.6)
+            .font(BrandTypography.wordmarkFont)
+            .tracking(-0.35)
+            .accessibilityElement(children: .ignore)
             .accessibilityLabel("ImageBench")
     }
 }

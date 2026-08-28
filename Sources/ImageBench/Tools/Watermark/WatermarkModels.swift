@@ -37,18 +37,16 @@ struct WatermarkPlacement: Codable, Equatable, Sendable {
 }
 
 struct WatermarkDraft: Codable, Equatable, Sendable {
+    static let defaultText = "© "
+
     var kind: WatermarkKind = .text
-    var text = "© Your Name"
+    var text = WatermarkDraft.defaultText
     var color = WatermarkColor.white
     var opacity = 0.82
     var relativeWidth = 0.24
     var placement = WatermarkPlacement.bottomRight
 
-    static var cleanSlate: WatermarkDraft {
-        var draft = WatermarkDraft()
-        draft.text = ""
-        return draft
-    }
+    static var cleanSlate: WatermarkDraft { WatermarkDraft() }
 
     func normalized() -> WatermarkDraft {
         var copy = self

@@ -8,15 +8,14 @@ Decision: **source release preparation is healthy; hold unsigned public binaries
 
 ## Executive outcome
 
-The image-processing core, offline bundle, and inspected Gallery Workbench UI are healthy. The latest debug/release/package/smoke pipeline passed, all 104 tests passed in both configurations with the opt-in benchmark skipped as designed, and the explicit scale benchmark passed.
+The image-processing core, offline bundle, and inspected Gallery Workbench UI are healthy. The latest debug/release/package/smoke pipeline passed, all 107 tests passed in both configurations with the two opt-in diagnostics skipped as designed, and the explicit scale benchmark passed.
 
-The requested GitHub origin is configured, push/PR CI is configured to produce correctly named dual-architecture ImageBench artifacts, and pinned dependency downloads are checksum-verified. Public binary distribution is not ready because the release cannot yet be tied to a reviewed commit, the first remote CI run has not occurred, and the package has not received a Developer ID signature or notarization ticket. These are release-engineering blockers rather than known image-processing correctness defects.
+The reviewed 0.2.0 baseline is committed and pushed to the requested GitHub origin, push/PR CI is configured to produce correctly named dual-architecture ImageBench artifacts, and pinned dependency downloads are checksum-verified. Public binary distribution is not ready because the first remote CI result still needs confirmation and the package has not received a Developer ID signature or notarization ticket. These are release-engineering blockers rather than known image-processing correctness defects.
 
 ## Launch blockers
 
 | Priority | Finding | Evidence | Required outcome |
 | --- | --- | --- | --- |
-| P1 | No auditable source baseline | The GitHub `origin` is configured, but Git reports `No commits yet on main`; every project file is untracked and `HEAD` does not resolve. | Review and create the first intentional commit before producing release artifacts. |
 | P1 | Public signing is incomplete | The fresh app is valid on disk with hardened runtime but uses an ad-hoc signature, has no Team Identifier, and is not notarized/stapled. | Package with the release owner's Developer ID, notarize, staple, and pass Gatekeeper assessment. |
 
 ## Follow-up validation
@@ -24,9 +23,9 @@ The requested GitHub origin is configured, push/PR CI is configured to produce c
 | Priority | Finding | Required outcome |
 | --- | --- | --- |
 | P2 | Current local package is arm64 only. | Produce and smoke-test the Intel artifact on the configured Intel runner or representative hardware. |
-| P2 | The corrected GitHub Actions workflow has not run remotely. | Push the reviewed baseline and confirm both versioned artifacts complete and download correctly. |
+| P2 | The first GitHub Actions matrix result has not been confirmed from this host. | Confirm both versioned artifacts complete and download correctly from the pushed baseline. |
 | P2 | Accessibility evidence is structural, not a complete assistive-technology certification. | Complete hands-on keyboard, VoiceOver, Increase Contrast, and Reduce Motion passes on representative Apple Silicon and Intel Macs. |
-| P2 | Scale and RAW coverage use generated fixtures and extension contracts. | Profile very large real camera files, representative RAW camera generations, and a realistic mixed library without committing private images. |
+| P2 | RAW coverage still uses generated fixtures and extension contracts. | Profile very large real camera files and representative RAW camera generations without committing private images. |
 | P2 | Native UI behavior has no automated UI regression suite. | Add focused coverage for navigation, sheets, drop targets, persistent actions, and critical accessibility state. |
 | P3 | Two process helper types use `@unchecked Sendable`. | Keep the lock/lifecycle assumptions explicit and extend race/cancellation coverage when this service changes. |
 | P3 | The release executable embeds the local SwiftPM build path as a resource-bundle fallback string. | Decide whether reproducible/public builds must strip this developer-path disclosure. Runtime resource lookup works from the packaged bundle. |
@@ -34,8 +33,8 @@ The requested GitHub origin is configured, push/PR CI is configured to produce c
 
 ## Code-quality evidence
 
-- Source size: 5,446 Swift lines across feature views, `@MainActor` view models, engines, and narrow shared services.
-- Test inventory: 104 deterministic XCTest cases generated from local fixtures; no personal-photo dependency was found.
+- Source size: 5,486 Swift lines across feature views, `@MainActor` view models, engines, and narrow shared services.
+- Test inventory: 107 deterministic XCTest cases generated from local fixtures or skipped unless an explicit private-library path is supplied; no personal-photo path or asset is committed.
 - Static scan: no `TODO`, `FIXME`, `HACK`, `XXX`, `fatalError`, `try!`, or forced-cast findings in `Sources` or `Tests`.
 - Privacy scan: no runtime URLSession/network APIs, telemetry, analytics, source logging, or personal absolute paths in source, tests, or scripts.
 - Architecture boundaries: all five observable view models are `@MainActor`; `Process` construction is confined to `ProcessRunner`; engines and services contain the processing work.
@@ -47,13 +46,14 @@ The requested GitHub origin is configured, push/PR CI is configured to produce c
 | Check | Result |
 | --- | --- |
 | `Scripts/lint.sh` | Passed |
-| Debug suite | 104 executed, 1 opt-in benchmark skipped, 0 failures |
-| Release suite | 104 executed, 1 opt-in benchmark skipped, 0 failures |
+| Debug suite | 107 executed, 2 opt-in diagnostics skipped, 0 failures |
+| Release suite | 107 executed, 2 opt-in diagnostics skipped, 0 failures |
 | `Scripts/package-app.sh` | Passed |
 | `Scripts/smoke-test-app.sh` | Passed, including a real bundled mozjpeg encode |
 | Pinned dependency fetch | Passed with SHA-256 verification before extraction |
-| GitHub Actions workflow | YAML and shell syntax passed locally; first remote matrix run awaits the initial push |
+| GitHub Actions workflow | YAML and shell syntax passed locally; baseline commit `1e80e89` is pushed and the first remote matrix result awaits confirmation |
 | `Scripts/run-benchmarks.sh` | Passed: 200 images in 4.26 s; 1,200-file scan in 0.060 s on the audited Apple Silicon host |
+| Opt-in real-folder compression | Passed: 337 recursively discovered screenshots (148.6 MB), metadata preservation enabled, 337 outputs, 0 failures, 0 skips in 383.5 s; input remained read-only and disposable output was removed |
 | Bundle verification | 23 MB arm64 app; version 0.2.0 (2); signature structure valid; bundled tools and licenses present |
 | CI-style archive | 6.5 MB `ImageBench-0.2.0-macos-arm64.zip`; complete app bundle structure verified |
 
@@ -73,4 +73,4 @@ Accessibility-tree inspection exposed labelled navigation, ordered headings, upl
 
 ## Documentation reconciliation
 
-All first-party Markdown files were inventoried. Product names, version 0.2.0/build 2, dependency versions and checksums, supported formats, privacy claims, build commands, source-safety rules, repository links, and local links were checked against current code and packaging. README and contributor instructions now point to the GitHub repository and explain automatic artifact builds; roadmap and release documents expose the remaining commit, representative-hardware, signing, and notarization gates.
+All first-party Markdown files were inventoried. Product names, version 0.2.0/build 2, dependency versions and checksums, supported formats, privacy claims, build commands, source-safety rules, repository links, and local links were checked against current code and packaging. README and contributor instructions point to the GitHub repository and explain automatic artifact builds; roadmap and release documents expose the remaining CI-result, representative-hardware, signing, and notarization gates.

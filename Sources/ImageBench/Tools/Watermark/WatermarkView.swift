@@ -99,6 +99,7 @@ struct WatermarkView: View {
                     Divider()
                     placementSection
                 }
+                .padding(PFSpacing.micro)
             }
             .scrollIndicators(.automatic)
         }
