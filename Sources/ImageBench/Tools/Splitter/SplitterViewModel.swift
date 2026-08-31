@@ -10,6 +10,7 @@ final class SplitterViewModel: ObservableObject {
     @Published var count = 3
     @Published var isRunning = false
     @Published var progressText = ""
+    @Published private(set) var sourceDimensions: ImageDimensions?
 
     private var task: Task<Void, Never>?
 
@@ -76,9 +77,15 @@ final class SplitterViewModel: ObservableObject {
         WorkspaceFileActions.reveal(folder: outputFolder)
     }
 
+    var partDimensions: [ImageDimensions] {
+        guard let sourceDimensions else { return [] }
+        return (try? SplitterEngine.partDimensions(source: sourceDimensions, orientation: orientation, count: count)) ?? []
+    }
+
     private func apply(_ selection: SelectedImage) {
         input = selection.url
         preview = selection.preview
+        sourceDimensions = ImageDimensions(size: selection.preview.size)
         if outputFolder == nil { outputFolder = selection.url.deletingLastPathComponent() }
         progressText = ""
     }

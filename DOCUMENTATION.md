@@ -13,8 +13,8 @@ ImageBench uses a small connected documentation system. Each document has one pr
 | What has changed? | `CHANGELOG.md` | `VERSIONING.md` for release rules |
 | What version should a change receive? | `VERSIONING.md` | `CHANGELOG.md`, `ROADMAP.md` |
 | What comes next? | `ROADMAP.md` | `CHANGELOG.md` for completed work |
-| How should the UI look and behave? | `Design/UI_DESIGN_SYSTEM.md` | `design-qa.md` and design audits for evidence |
-| Is the current build ready to ship? | `Design/PRODUCTION_LAUNCH_AUDIT.md` | `DEVELOPMENT.md` and `VERSIONING.md` for release procedure |
+| How should the UI look and behave? | `Design/UI_DESIGN_SYSTEM.md` | `design-qa.md` for the current verification record |
+| Is the current build ready to ship? | `ROADMAP.md` | `DEVELOPMENT.md` and `VERSIONING.md` for release procedure |
 
 ## Document Ownership
 
@@ -28,9 +28,7 @@ ImageBench uses a small connected documentation system. Each document has one pr
 - `VERSIONING.md` — version selection, build numbers, tags, artifacts, and release synchronization.
 - `ROADMAP.md` — future sequence and explicitly uncommitted ideas; completed work should move into the changelog or be marked complete.
 - `Design/UI_DESIGN_SYSTEM.md` — normative design, interaction, content, motion, and accessibility contract.
-- `design-qa.md` — cumulative visual and interaction verification record for the Gallery Workbench interface.
-- `Design/PRODUCTION_LAUNCH_AUDIT.md` — current production QA, code-quality evidence, and release-go/no-go blockers.
-- Other `Design/*_AUDIT.md` files — evidence-backed historical product/design audits, not permanent normative policy.
+- `design-qa.md` — concise current visual and interaction verification record for the Gallery Workbench interface; generated screenshots are temporary by default.
 - `THIRD_PARTY_NOTICES.md` — bundled dependency versions, attribution, and license references.
 - `LICENSE` — repository license; it is authoritative over summaries elsewhere.
 
@@ -41,19 +39,19 @@ ImageBench uses a small connected documentation system. Each document has one pr
 | User-visible feature or fix | `CHANGELOG.md`, `README.md`, relevant tool docs/tests |
 | Version or distributed build | `VERSIONING.md`, `Packaging/Info.plist`, `CHANGELOG.md`, release notes |
 | Architecture or data-flow contract | `DEVELOPMENT.md`, `AGENTS.md`, `CODE_STYLE.md` when boundaries change |
-| UI component or interaction rule | `Design/UI_DESIGN_SYSTEM.md`, `design-qa.md`, relevant audit evidence |
+| UI component or interaction rule | `Design/UI_DESIGN_SYSTEM.md`, `design-qa.md` |
 | Supported format or dependency | `README.md`, `DEVELOPMENT.md`, `AGENTS.md`, `THIRD_PARTY_NOTICES.md`, changelog |
 | Privacy, offline, source-safety, or overwrite behavior | `README.md`, `AGENTS.md`, `DEVELOPMENT.md`, changelog |
 | Planned work or sequencing | `ROADMAP.md`; do not present it as shipped until it reaches `CHANGELOG.md` |
 | Contributor workflow or automation | `CONTRIBUTING.md`, `AGENTS.md`, `.github` templates/workflows |
-| Production-readiness finding | `Design/PRODUCTION_LAUNCH_AUDIT.md`, then the owning release, roadmap, or design document |
+| Production-readiness finding | `ROADMAP.md`, then the owning release or design document |
 
 ## Consistency Rules
 
 1. Link to the authoritative document instead of copying long policy sections.
 2. Update claims such as test counts, supported formats, versions, and release status everywhere they are intentionally surfaced.
 3. Keep roadmap intent separate from changelog fact.
-4. Keep design audits as dated evidence; move lasting rules into `Design/UI_DESIGN_SYSTEM.md`.
+4. Keep generated visual evidence outside the repository by default; record conclusions in `design-qa.md` and lasting rules in `Design/UI_DESIGN_SYSTEM.md`.
 5. Keep implementation explanations in `DEVELOPMENT.md`, not in view code comments or the README.
 6. Preserve historical changelog entries; current work belongs under **Unreleased**.
 7. When adding a new long-lived Markdown document, add it to this map and the README documentation list.

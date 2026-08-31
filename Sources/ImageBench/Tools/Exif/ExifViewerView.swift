@@ -1,10 +1,12 @@
 import AppKit
+import MapKit
 import SwiftUI
 
 struct ExifViewerView: View {
     @ObservedObject var model: ExifViewerViewModel
     @State private var isDropTargeted = false
     @State private var metadataSearch = ""
+    @State private var showsMap = false
 
     var body: some View {
         ToolWorkspace(
@@ -28,6 +30,11 @@ struct ExifViewerView: View {
             }
         } actionBar: {
             actionBar
+        }
+        .sheet(isPresented: $showsMap) {
+            if let coordinate = model.inspection?.coordinate {
+                ExifMapSheet(coordinate: coordinate, openGoogleMaps: model.openGoogleMaps)
+            }
         }
     }
 
@@ -138,7 +145,12 @@ struct ExifViewerView: View {
                 } else {
                     LazyVStack(alignment: .leading, spacing: PFSpacing.card) {
                         ForEach(filteredSections) { section in
-                            MetadataSectionView(section: section)
+                            MetadataSectionView(
+                                section: section,
+                                showsLocationActions: section.title == "Location" && model.inspection?.coordinate != nil,
+                                showMap: { showsMap = true },
+                                openGoogleMaps: model.openGoogleMaps
+                            )
                             if section.id != filteredSections.last?.id { Divider() }
                         }
                     }
@@ -182,8 +194,92 @@ struct ExifViewerView: View {
     }
 }
 
+private struct LocationActionsView: View {
+    let showMap: () -> Void
+    let openGoogleMaps: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: PFSpacing.compact) {
+            Label("Map this location", systemImage: "mappin.and.ellipse")
+                .font(.caption.weight(.semibold))
+            HStack(spacing: PFSpacing.compact) {
+                Button("Show Map", action: showMap)
+                Button("Open in Google Maps…", action: openGoogleMaps)
+            }
+            .controlSize(.small)
+            Text("Maps connect only when you choose one of these actions.")
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .contain)
+    }
+}
+
+private struct ExifMapSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    let coordinate: ExifCoordinate
+    let openGoogleMaps: () -> Void
+
+    private var mapCoordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+
+    private var region: MKCoordinateRegion {
+        MKCoordinateRegion(
+            center: mapCoordinate,
+            span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+        )
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: PFSpacing.section) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: PFSpacing.micro) {
+                    Text("Photo Location")
+                        .font(.title2.bold())
+                    Text(coordinate.displayValue)
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                }
+                Spacer()
+                Button("Done", action: dismiss.callAsFunction)
+                    .keyboardShortcut(.cancelAction)
+            }
+            Map(initialPosition: MapCameraPosition.region(region)) {
+                Marker("Photo location", coordinate: mapCoordinate)
+            }
+            .mapControls {
+                MapCompass()
+                MapScaleView()
+                MapZoomStepper()
+            }
+            .clipShape(RoundedRectangle(cornerRadius: PFRadius.card))
+            .overlay { RoundedRectangle(cornerRadius: PFRadius.card).stroke(PFTheme.border) }
+            .accessibilityLabel("Map showing the photo location")
+
+            HStack(alignment: .center, spacing: PFSpacing.control) {
+                Label("Apple map tiles may use an internet connection.", systemImage: "network")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Open in Google Maps…", action: openGoogleMaps)
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .primaryActionHover()
+            }
+        }
+        .padding(PFSpacing.screen)
+        .frame(width: 720, height: 560)
+    }
+}
+
 private struct MetadataSectionView: View {
     let section: ExifMetadataSection
+    let showsLocationActions: Bool
+    let showMap: () -> Void
+    let openGoogleMaps: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: PFSpacing.compact) {
@@ -200,6 +296,10 @@ private struct MetadataSectionView: View {
                     Text(field.label)
                 }
                 .font(.caption)
+            }
+            if showsLocationActions {
+                LocationActionsView(showMap: showMap, openGoogleMaps: openGoogleMaps)
+                    .padding(.top, PFSpacing.micro)
             }
         }
     }

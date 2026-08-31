@@ -44,14 +44,16 @@ enum ExifViewerEngine {
         )
         let preview = thumbnail.map { NSImage(cgImage: $0, size: NSSize(width: $0.width, height: $0.height)) }
         let histogram = try thumbnail.map(histogram(from:)) ?? .empty
-        let sections = metadataSections(url: url, source: source, properties: properties)
+        let coordinate = coordinate(from: nestedDictionary(properties, key: kCGImagePropertyGPSDictionary))
+        let sections = metadataSections(url: url, source: source, properties: properties, coordinate: coordinate)
 
         return ExifInspection(
             url: url,
             preview: preview,
             histogram: histogram,
             sections: sections,
-            isRAW: ExifFileSupport.isRAW(url)
+            isRAW: ExifFileSupport.isRAW(url),
+            coordinate: coordinate
         )
     }
 
@@ -115,7 +117,8 @@ enum ExifViewerEngine {
     private static func metadataSections(
         url: URL,
         source: CGImageSource,
-        properties: [String: Any]
+        properties: [String: Any],
+        coordinate: ExifCoordinate?
     ) -> [ExifMetadataSection] {
         let tiff = nestedDictionary(properties, key: kCGImagePropertyTIFFDictionary)
         let exif = nestedDictionary(properties, key: kCGImagePropertyExifDictionary)
@@ -195,7 +198,7 @@ enum ExifViewerEngine {
             ])
         )
 
-        sections.appendIfNotEmpty(title: "Location", fields: locationFields(gps))
+        sections.appendIfNotEmpty(title: "Location", fields: locationFields(gps, coordinate: coordinate))
         sections.appendIfNotEmpty(
             title: "Rights & Workflow",
             fields: compactFields([
@@ -291,21 +294,24 @@ enum ExifViewerEngine {
         return value(exif, key: kCGImagePropertyExifISOSpeedRatings)
     }
 
-    private static func locationFields(_ gps: [String: Any]) -> [ExifMetadataField] {
-        var fields: [ExifMetadataField?] = []
-        if let latitude = number(gps, key: kCGImagePropertyGPSLatitude),
-            let longitude = number(gps, key: kCGImagePropertyGPSLongitude)
-        {
-            let latitudeRef = value(gps, key: kCGImagePropertyGPSLatitudeRef) ?? "N"
-            let longitudeRef = value(gps, key: kCGImagePropertyGPSLongitudeRef) ?? "E"
-            let signedLatitude = latitudeRef.uppercased() == "S" ? -latitude : latitude
-            let signedLongitude = longitudeRef.uppercased() == "W" ? -longitude : longitude
-            fields.append(field("Coordinates", String(format: "%.6f, %.6f", signedLatitude, signedLongitude)))
-        }
+    private static func locationFields(_ gps: [String: Any], coordinate: ExifCoordinate?) -> [ExifMetadataField] {
+        var fields: [ExifMetadataField?] = [field("Coordinates", coordinate?.displayValue)]
         fields.append(field("Altitude", number(gps, key: kCGImagePropertyGPSAltitude).map { decimal($0, suffix: " m") }))
         fields.append(field("GPS Time", value(gps, key: kCGImagePropertyGPSTimeStamp)))
         fields.append(field("Map Datum", value(gps, key: kCGImagePropertyGPSMapDatum)))
         return compactFields(fields)
+    }
+
+    private static func coordinate(from gps: [String: Any]) -> ExifCoordinate? {
+        guard let latitude = number(gps, key: kCGImagePropertyGPSLatitude),
+            let longitude = number(gps, key: kCGImagePropertyGPSLongitude)
+        else { return nil }
+
+        let latitudeRef = value(gps, key: kCGImagePropertyGPSLatitudeRef)?.uppercased()
+        let longitudeRef = value(gps, key: kCGImagePropertyGPSLongitudeRef)?.uppercased()
+        let signedLatitude = latitudeRef == "S" ? -abs(latitude) : latitudeRef == "N" ? abs(latitude) : latitude
+        let signedLongitude = longitudeRef == "W" ? -abs(longitude) : longitudeRef == "E" ? abs(longitude) : longitude
+        return ExifCoordinate(latitude: signedLatitude, longitude: signedLongitude)
     }
 
     private static func flattenedFields(_ dictionary: [String: Any]) -> [ExifMetadataField] {

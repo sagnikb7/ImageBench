@@ -50,6 +50,57 @@ final class ExifViewerTests: XCTestCase {
         XCTAssertTrue(result.sections.contains { $0.title == "Camera & Lens" })
         XCTAssertTrue(result.sections.contains { $0.title == "Exposure" })
         XCTAssertTrue(result.sections.contains { $0.title == "Location" })
+        XCTAssertEqual(result.coordinate, ExifCoordinate(latitude: 22.5726, longitude: 88.3639))
+        XCTAssertEqual(result.coordinate?.displayValue, "22.572600, 88.363900")
+    }
+
+    func testCoordinateValidationAndGoogleMapsURL() throws {
+        XCTAssertNil(ExifCoordinate(latitude: .nan, longitude: 10))
+        XCTAssertNil(ExifCoordinate(latitude: 91, longitude: 10))
+        XCTAssertNil(ExifCoordinate(latitude: 10, longitude: -181))
+
+        let coordinate = try XCTUnwrap(ExifCoordinate(latitude: -33.8688, longitude: 151.2093))
+        let url = try XCTUnwrap(coordinate.googleMapsURL)
+        let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        let query = Dictionary(
+            uniqueKeysWithValues: (components.queryItems ?? []).compactMap { item in
+                item.value.map { (item.name, $0) }
+            })
+
+        XCTAssertEqual(components.scheme, "https")
+        XCTAssertEqual(components.host, "www.google.com")
+        XCTAssertEqual(components.path, "/maps/search/")
+        XCTAssertEqual(query["api"], "1")
+        XCTAssertEqual(query["query"], "-33.868800, 151.209300")
+    }
+
+    func testInspectionAppliesSouthernAndWesternGPSReferences() throws {
+        let temp = try TemporaryDirectory()
+        let url = temp.url.appendingPathComponent("southern-western.jpg")
+        try TestImageFactory.make(
+            at: url,
+            width: 40,
+            height: 30,
+            type: .jpeg,
+            metadata: [
+                kCGImagePropertyGPSDictionary: [
+                    kCGImagePropertyGPSLatitude: 33.8688,
+                    kCGImagePropertyGPSLatitudeRef: "S",
+                    kCGImagePropertyGPSLongitude: 70.6693,
+                    kCGImagePropertyGPSLongitudeRef: "W",
+                ]
+            ]
+        )
+
+        let result = try ExifViewerEngine.inspect(url)
+
+        XCTAssertEqual(result.coordinate, ExifCoordinate(latitude: -33.8688, longitude: -70.6693))
+        XCTAssertTrue(
+            result.sections.contains {
+                $0.title == "Location"
+                    && $0.fields.contains { $0.label == "Coordinates" && $0.value == "-33.868800, -70.669300" }
+            }
+        )
     }
 
     func testHistogramUsesBoundedNormalizedChannels() throws {

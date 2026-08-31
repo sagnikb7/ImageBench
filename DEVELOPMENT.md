@@ -7,6 +7,7 @@ This guide explains how ImageBench is assembled, how its processing pipelines be
 - Swift Package Manager project, openable directly in Xcode
 - SwiftUI application shell and tool interfaces
 - AppKit for `NSOpenPanel` and `NSSavePanel`
+- MapKit for an explicitly opened EXIF location preview
 - Core Image for orientation-aware composition, scaling, and blur
 - ImageIO for decoding, format inspection, and export
 - Foundation `Process` for bundled mozjpeg and ExifTool execution
@@ -102,6 +103,8 @@ The UI log shows the actual executable and arguments. The app does not execute a
 
 When the user has not chosen a destination, the compressor derives a `Compressed Output` folder inside the current input folder. This is only a planned URL while selecting and scanning; changing the input moves the automatic destination, while an explicitly chosen destination is preserved. Before encoding, `CompressionPreflight` verifies the selected binaries, creates and write-probes the output folder, and checks conservative output and temporary-disk estimates. During a run, a per-file decode, encoder, or metadata failure is recorded and processing continues. Cancellation returns a partial `CompressionBatchResult`: completed files remain, the active partial output is removed, and untouched inputs are reported as skipped.
 
+Fixed compressor presets retain their exact tested quality recipes. When the user enters Custom, the quality control normalizes to a 0–100 scale in five-point steps; this UI contract must not silently rewrite the archive, web, or maximum-compression preset values.
+
 ## Process Execution
 
 `ProcessRunner` redirects stdout and stderr to unique temporary files rather than bounded pipes. This prevents subprocess deadlocks when a tool emits more data than a pipe buffer can hold. `CancellableProcessRunner` tracks its active process behind a lock and terminates it when the Swift task is cancelled.
@@ -139,6 +142,8 @@ The scanner is cancellation-aware and returns naturally sorted paths. If new for
 The splitter normalizes source orientation, calculates integer boundaries, and allocates remainder pixels across parts. For a 101-pixel image split into three columns, the widths are 33, 34, and 34; no source pixel is dropped.
 
 Horizontal parts are named from top to bottom. Vertical parts are named from left to right. The engine accepts 2–12 slices and also rejects a count above the number of pixels on the split axis. Keeping the product limit in `SplitterEngine`, rather than only in the Stepper, protects programmatic callers and future interfaces.
+
+The inspector derives its source and per-part aspect-ratio summary from the same integer slice ranges used by export. Uniform parts show one exact dimension and ratio; remainder-pixel splits show a dimension and decimal-ratio range rather than implying that every part is identical.
 
 ## Aspect-Ratio Filler
 
@@ -188,6 +193,8 @@ selected standard image or recognized RAW container
 
 `ExifViewerEngine` groups file, image, capture, camera/lens, exposure, location, rights/workflow, and RAW/maker-note fields. It does not mutate the selected file or log metadata values. Preview decoding and histogram calculation run outside the main actor, are cancellation-aware, and use bounded images so large camera originals do not become unbounded UI work. Selection generations prevent a late inspection from replacing a newer file.
 
+When both GPS axes are present, the engine converts their hemisphere references into a validated finite coordinate. Coordinates outside the latitude/longitude ranges are not offered to mapping actions. The inspector remains local and offline; only an explicit **Show Map** action allows MapKit to request Apple map tiles, and only **Open in Google Maps** sends the coordinate to the external Google Maps website. Neither action sends the source image or its other metadata.
+
 ## Concurrency and Cancellation
 
 - Observable UI state belongs to `@MainActor` view models.
@@ -212,15 +219,15 @@ Test groups:
 - `CompressorScaleTests`: a 1,200-file scan and an opt-in 200-image encode benchmark
 - `CompressorRealFolderTests`: an opt-in recursive end-to-end run against a contributor-selected private folder, using disposable output
 - `CompressorBattleTests`: mixed-format folders, unrelated files, corrupt inputs, nested output exclusion, Unicode/quoted paths, duplicate stems, and uppercase HEIC/HEIF
-- `CompressorViewModelTests`: lazy output selection and explicit-destination preservation
+- `CompressorViewModelTests`: lazy output selection, explicit-destination preservation, and five-point Custom quality normalization
 - `ProcessRunnerTests`: output, errors, stress, cancellation, reuse
 - `CompressionInputScannerTests`: recursion, sorting, exclusions, cancellation
-- `SplitterTests`: geometry, order, naming, formats, HEIC
+- `SplitterTests`: geometry, source/per-part ratio descriptions, remainder distribution, order, naming, formats, and HEIC
 - `AspectFillerTests`: ratios, pixels, blur, exports, safety limits
 - `WatermarkEngineTests`: normalized layout, text and image rendering, opacity, source protection, and export
 - `WatermarkPresetStoreTests`: four-slot validation, manifest round-trips, durable copied assets, and replacement cleanup
 - `WatermarkViewModelTests`: initial preset loading, empty-slot reset, confirmed preset deletion/reset behavior, and navigation-state preservation
-- `ExifViewerTests`: metadata grouping, RAW-extension recognition, bounded normalized histograms, and unsupported formats
+- `ExifViewerTests`: metadata grouping, GPS validation and map URLs, RAW-extension recognition, bounded normalized histograms, and unsupported formats
 - `ImageRendererTests`: rendering, previews, exports, corrupt input
 - `FileSupportTests`: extensions, sizes, collision names, command display quoting
 
@@ -276,7 +283,7 @@ The Gallery Workbench direction is implemented through semantic components in `S
 
 The flat coral photo-stack mark is shared by the sidebar, About surface, and packaged macOS icon. After changing that artwork, run `swift Scripts/generate-app-icon.swift` from the repository root to regenerate the SwiftPM resource and every asset-catalog size, then inspect both the 1,024-point source and the 16-point result before packaging.
 
-The selected source mockup, implementation capture, combined comparison, and final report live under `Design/` and in `design-qa.md`. UI changes should repeat the audit → visual target → implementation → screenshot comparison loop and update the evidence when a visible contract changes.
+The selected long-lived visual concepts live under `Design/`; current verification conclusions live in `design-qa.md`. UI changes should repeat the audit → visual target → implementation → visual comparison loop, keeping generated screenshots outside the worktree unless the repository owner explicitly approves a durable reference.
 
 For deterministic local screenshots, a development run can preload a photo folder and a synthetic mixed result state without modifying files:
 

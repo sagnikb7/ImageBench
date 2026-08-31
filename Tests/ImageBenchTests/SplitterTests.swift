@@ -4,6 +4,19 @@ import ImageIO
 @testable import ImageBench
 
 final class SplitterTests: XCTestCase {
+    func testPartDimensionsMatchRemainderDistributionAndDescribeSourceRatio() throws {
+        let source = try XCTUnwrap(ImageDimensions(width: 101, height: 60))
+
+        let columns = try SplitterEngine.partDimensions(source: source, orientation: .vertical, count: 3)
+        let rows = try SplitterEngine.partDimensions(source: source, orientation: .horizontal, count: 4)
+
+        XCTAssertEqual(source.summary, "101 × 60 px • 101:60 • 1.68")
+        XCTAssertEqual(columns.map(\.width), [33, 34, 34])
+        XCTAssertTrue(columns.allSatisfy { $0.height == 60 })
+        XCTAssertEqual(rows.map(\.height), [15, 15, 15, 15])
+        XCTAssertTrue(rows.allSatisfy { $0.width == 101 })
+    }
+
     func testVerticalSplitDistributesRemainderWithoutLosingPixels() throws {
         let temp = try TemporaryDirectory()
         let input = temp.url.appendingPathComponent("uneven.png")

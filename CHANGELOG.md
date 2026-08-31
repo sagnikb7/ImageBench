@@ -6,10 +6,20 @@ Changes belong under **Unreleased** when they merge. A release moves those entri
 
 ## Unreleased
 
+## 0.3.0 - 2026-09-01
+
+ImageBench 0.3.0 adds explicit photo-location map actions, live source-to-split aspect-ratio guidance, and clearer Custom compression quality control. Existing presets and source images require no migration.
+
 ### Added
+
+- EXIF Viewer now validates embedded GPS coordinates, shows an explicitly opened native map preview, and can hand the location to Google Maps while keeping normal inspection local.
+- Image Splitter now compares the selected image's dimensions and aspect ratio with the resulting per-row or per-column dimensions and ratio, including honest ranges when remainder pixels make parts differ.
 
 ### Changed
 
+- Repository visual QA now keeps conclusions in a concise text record and leaves generated screenshots out of version control by default, removing obsolete duplicate audit trees and stale audit reports.
+- Bulk Compressor's Custom quality control now uses a clear 0–100 scale in five-point steps while keeping the fixed preset recipes unchanged.
+- EXIF map actions now render inside the Location metadata group directly beneath the coordinates they act on.
 - New and reset text-watermark drafts now begin with an editable `©` symbol that users can keep or remove.
 - Reworked the sidebar ImageBench wordmark with a condensed Archivo Narrow treatment and coral underscore, bundled locally under the SIL Open Font License.
 

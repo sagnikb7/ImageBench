@@ -6,9 +6,9 @@ ImageBench is a native, offline-first image utility for macOS. It combines bulk 
 
 The project is designed around a simple trust model: source images are never modified, outputs are never silently overwritten, processing remains available offline, and the exact external commands are visible to the user.
 
-ImageBench now includes the Gallery Workbench interface: a modern native workspace with semantic light/dark styling, drag-and-drop, richer previews, durable result summaries, Settings, and About surfaces. The processing core, offline packaging, and 107-test suite remain the source of truth for behavior.
+ImageBench now includes the Gallery Workbench interface: a modern native workspace with semantic light/dark styling, drag-and-drop, richer previews, durable result summaries, Settings, and About surfaces. The processing core, offline packaging, and 111-test suite remain the source of truth for behavior.
 
-Current source release: **0.2.0 (build 2)**.
+Current source release: **0.3.0 (build 3)**.
 
 ## Features
 
@@ -17,6 +17,7 @@ Current source release: **0.2.0 (build 2)**.
 - Recursively scans JPEG/JPG, PNG, HEIC/HEIF, TIFF, BMP, GIF, and WebP files
 - Uses pinned mozjpeg `cjpeg` for JPEG output
 - Includes archive, web, maximum-compression, and custom presets
+- Offers Custom JPEG quality from 0–100 in clear five-point steps
 - Preserves metadata or removes GPS, EXIF, or all metadata
 - Handles transparent PNG conversion by flattening onto white
 - Shows exact commands, current file, progress, and completion size
@@ -32,6 +33,7 @@ Current source release: **0.2.0 (build 2)**.
 - Distributes remainder pixels without dropping source content
 - Names parts deterministically from top-to-bottom or left-to-right
 - Provides a visual slice overlay and cancellable processing
+- Compares the source dimensions and aspect ratio with each resulting row or column, including remainder-pixel ranges
 - Shows preparation hints for two- and three-panel Instagram layouts
 
 ### Watermark Studio
@@ -54,6 +56,7 @@ Current source release: **0.2.0 (build 2)**.
 - Recognizes DNG, CR2/CR3, NEF/NRW, ARW/SR2/SRF, RAF, ORF/ORI, RW2/RWL, and PEF/PTX files
 - Organizes file, image, capture, camera/lens, exposure, location, rights, RAW, and maker-note data into readable groups
 - Shows a bounded log-scale luminance and RGB histogram without modifying the selected file
+- Validates embedded GPS coordinates and offers an explicit native map preview or Google Maps handoff
 - Filters metadata by field name or value and reports an explicit codec error when macOS cannot decode a particular camera format
 
 ### Aspect-Ratio Filler
@@ -74,11 +77,12 @@ AppKit is used where SwiftUI intentionally delegates to macOS, including `NSOpen
 
 ## Privacy and Offline Operation
 
-- No telemetry, analytics, advertising, or runtime network calls
+- No telemetry, analytics, advertising, or implicit background network calls
 - No image uploads
 - No modification of source images
 - No manual dependency installation for users of the packaged app
 - Bundled tools run locally and continue working without internet access
+- EXIF map tiles and the Google Maps website are contacted only after the user explicitly opens them; metadata inspection itself stays local
 
 Development and release packaging may use the network once to fetch pinned dependency source archives. The resulting `.app` is self-contained.
 
@@ -115,7 +119,7 @@ Scripts/fetch-dependencies.sh
 
 ## Testing
 
-ImageBench currently has 107 XCTest cases covering:
+ImageBench currently has 111 XCTest cases covering:
 
 - preset-to-CLI contracts;
 - real mozjpeg JPEG encoding;
@@ -126,10 +130,10 @@ ImageBench currently has 107 XCTest cases covering:
 - partial-batch recovery, cancellation summaries, write/disk preflight, and 1,200-file scanning;
 - subprocess output stress, exit failures, cancellation, and reuse;
 - recursive scanning, natural sorting, exclusions, and cancellation;
-- splitter geometry, formats, part ordering, and the enforced 12-slice limit;
+- splitter geometry, source/per-part ratio descriptions, formats, part ordering, and the enforced 12-slice limit;
 - aspect-ratio geometry, solid and blurred pixels, exports, and allocation limits;
 - watermark layout, text rendering, image composition, opacity, source protection, export, four-slot persistence, cached-asset replacement, and race-safe image-preset restoration;
-- EXIF grouping, popular RAW-extension recognition, histogram normalization, unsupported files, and watermark preset reset behavior;
+- EXIF grouping, GPS validation/map-link generation, popular RAW-extension recognition, histogram normalization, unsupported files, and watermark preset reset behavior;
 - corrupt files, atomic destination replacement, and source-overwrite protection;
 - mixed six-format folders, non-image clutter, corrupt supported files, Unicode and quoted names, duplicate stems, nested output exclusion, and uppercase HEIC/HEIF.
 - bundled Archivo Narrow registration and an opt-in disposable real-folder compression diagnostic.
@@ -191,7 +195,7 @@ NOTARY_PROFILE=ImageBenchNotary Scripts/notarize-app.sh
 
 ## Automatic GitHub Builds
 
-Every push and pull request runs the complete GitHub Actions pipeline on Apple Silicon and Intel macOS 15 runners. Each job checks formatting, runs debug and optimized tests, packages the offline app, performs the real bundle smoke test, and uploads a ZIP named like `ImageBench-0.2.0-macos-arm64.zip` or `ImageBench-0.2.0-macos-x86_64.zip`.
+Every push and pull request runs the complete GitHub Actions pipeline on Apple Silicon and Intel macOS 15 runners. Each job checks formatting, runs debug and optimized tests, packages the offline app, performs the real bundle smoke test, and uploads a ZIP named like `ImageBench-0.3.0-macos-arm64.zip` or `ImageBench-0.3.0-macos-x86_64.zip`.
 
 To download a successful build:
 
@@ -246,10 +250,7 @@ Packaging/Info.plist
 - [VERSIONING.md](VERSIONING.md): product versions, build numbers, tags, artifacts, and release procedure
 - [Design/UI_DESIGN_SYSTEM.md](Design/UI_DESIGN_SYSTEM.md): normative visual, interaction, accessibility, and content rules
 - [ROADMAP.md](ROADMAP.md): completed phases, distribution work, and future ideas
-- [design-qa.md](design-qa.md): screenshot-based comparison against the selected Gallery Workbench design
-- [Design/PRODUCTION_LAUNCH_AUDIT.md](Design/PRODUCTION_LAUNCH_AUDIT.md): current production QA, code-quality evidence, and launch blockers
-- [Design/RELEASE_CANDIDATE_AUDIT.md](Design/RELEASE_CANDIDATE_AUDIT.md): historical 2026-08-24 visual walkthrough and functional matrix
-- [Design/CONSISTENCY_AUDIT.md](Design/CONSISTENCY_AUDIT.md): historical 2026-08-24 cross-module consistency review
+- [design-qa.md](design-qa.md): current text-only visual and interaction verification record
 - [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md): bundled dependency versions and license notices
 
 The project explicitly welcomes responsible AI-assisted development. Contributors remain responsible for reviewing generated work, understanding it, protecting private data, and providing real verification evidence.
@@ -264,7 +265,7 @@ GitHub Actions runs the debug suite, optimized suite, packaging process, and off
 
 ## Roadmap
 
-The native Gallery Workbench redesign is implemented. The next release work is to clear the repository, CI, dependency-integrity, accessibility, and signing/notarization gates recorded in [Design/PRODUCTION_LAUNCH_AUDIT.md](Design/PRODUCTION_LAUNCH_AUDIT.md). See [ROADMAP.md](ROADMAP.md) for sequencing.
+The native Gallery Workbench redesign is implemented. The next release work is to clear the CI, accessibility, hardware-validation, and signing/notarization gates recorded in [ROADMAP.md](ROADMAP.md).
 
 ## License
 

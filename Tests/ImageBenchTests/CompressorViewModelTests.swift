@@ -4,6 +4,21 @@ import XCTest
 
 @MainActor
 final class CompressorViewModelTests: XCTestCase {
+    func testCustomQualityUsesFivePointStepsAcrossZeroToOneHundred() {
+        let model = CompressorViewModel()
+        model.options.quality = 82
+
+        model.selectPreset(.custom)
+        XCTAssertEqual(model.options.quality, 80)
+
+        model.setCustomQuality(88)
+        XCTAssertEqual(model.options.quality, 90)
+        model.setCustomQuality(-10)
+        XCTAssertEqual(model.options.quality, 0)
+        model.setCustomQuality(120)
+        XCTAssertEqual(model.options.quality, 100)
+    }
+
     func testSelectingInputAssignsLazyCompressedOutputFolder() throws {
         let temp = try TemporaryDirectory()
         let expectedOutput = temp.url.appendingPathComponent("Compressed Output", isDirectory: true)

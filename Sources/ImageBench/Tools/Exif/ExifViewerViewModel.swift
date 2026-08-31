@@ -67,4 +67,9 @@ final class ExifViewerViewModel: ObservableObject {
         guard let input else { return }
         WorkspaceFileActions.reveal(files: [input])
     }
+
+    func openGoogleMaps() {
+        guard let url = inspection?.coordinate?.googleMapsURL else { return }
+        WorkspaceFileActions.open(url)
+    }
 }

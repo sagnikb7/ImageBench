@@ -10,10 +10,10 @@ Status: substantially complete.
 - Bulk mozjpeg compression
 - Metadata preservation and removal
 - mixed-format compressor discovery plus JPEG, PNG, and HEIC format-preserving tools
-- Image splitting with format preservation
+- Image splitting with format preservation and live source/per-part aspect-ratio guidance
 - Aspect-ratio filling with solid and blurred backgrounds
 - Text and image watermarking with four durable reusable presets
-- Read-only EXIF/RAW metadata inspection with a bounded luminance/RGB histogram
+- Read-only EXIF/RAW metadata inspection with a bounded luminance/RGB histogram and explicit GPS map actions
 - Cancellation, progress, logs, and collision-safe output
 - Bundled offline dependencies
 - Debug, optimized, integration, and bundle smoke tests
@@ -91,10 +91,10 @@ Implemented in the Gallery Workbench release candidate:
 - succeeded/failed/skipped compression summary with retry, reveal, and command details;
 - redesigned splitter and aspect-filler workspaces;
 - Settings and About surfaces, including startup-module and watermark-preset controls;
-- screenshot-based visual QA against the selected concept.
+- temporary screenshot-based visual QA against the selected concept, with conclusions retained as text.
 - Watermark Studio with direct placement, persistent presets, and cached signature assets.
 - EXIF Viewer with grouped searchable metadata, popular RAW-container recognition, and a log-scale histogram;
-- release-candidate captures for all five tools plus Settings and About.
+- release-candidate walkthroughs for all five tools plus Settings and About.
 
 Remaining validation:
 
@@ -112,7 +112,8 @@ Implemented foundations:
 
 Remaining distribution work:
 
-- clear the blockers in `Design/PRODUCTION_LAUNCH_AUDIT.md`;
+- confirm Apple Silicon and Intel CI artifacts build, download, and smoke-test correctly;
+- complete representative hardware accessibility and RAW-codec validation;
 - publish signed and notarized releases;
 - document maintainers and a private security contact;
 - create a contribution-friendly backlog with scoped starter issues;

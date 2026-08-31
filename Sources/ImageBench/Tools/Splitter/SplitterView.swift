@@ -68,76 +68,82 @@ struct SplitterView: View {
 
     private var inspectorCard: some View {
         SurfaceCard {
-            VStack(alignment: .leading, spacing: PFSpacing.card) {
-                SectionHeading("Split Direction", number: 2)
-                Picker("Direction", selection: $model.orientation) {
-                    Label("Rows", systemImage: "rectangle.split.1x2").tag(SplitOrientation.horizontal)
-                    Label("Columns", systemImage: "rectangle.split.2x1").tag(SplitOrientation.vertical)
-                }
-                .pickerStyle(.segmented)
-
-                Divider()
-                SectionHeading("Number of Slices", number: 3)
-                HStack(alignment: .firstTextBaseline, spacing: PFSpacing.compact) {
-                    Text("\(model.count)")
-                        .font(.title2.monospacedDigit().bold())
-                    Text(model.count == 1 ? "slice" : "slices")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                HStack(spacing: PFSpacing.control) {
-                    Button {
-                        model.count = max(2, model.count - 1)
-                    } label: {
-                        Image(systemName: "minus")
-                            .frame(width: 18, height: 18)
+            ScrollView {
+                VStack(alignment: .leading, spacing: PFSpacing.card) {
+                    SectionHeading("Split Direction", number: 2)
+                    Picker("Direction", selection: $model.orientation) {
+                        Label("Rows", systemImage: "rectangle.split.1x2").tag(SplitOrientation.horizontal)
+                        Label("Columns", systemImage: "rectangle.split.2x1").tag(SplitOrientation.vertical)
                     }
-                    .accessibilityLabel("Decrease number of slices")
-                    .disabled(model.count <= 2)
+                    .pickerStyle(.segmented)
 
-                    VStack(spacing: PFSpacing.micro) {
-                        Slider(value: sliceCount, in: 2...Double(SplitterEngine.maximumSlices), step: 1) {
-                            Text("Number of slices")
+                    Divider()
+                    SectionHeading("Number of Slices", number: 3)
+                    HStack(alignment: .firstTextBaseline, spacing: PFSpacing.compact) {
+                        Text("\(model.count)")
+                            .font(.title2.monospacedDigit().bold())
+                        Text(model.count == 1 ? "slice" : "slices")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    HStack(spacing: PFSpacing.control) {
+                        Button {
+                            model.count = max(2, model.count - 1)
+                        } label: {
+                            Image(systemName: "minus")
+                                .frame(width: 18, height: 18)
                         }
-                        .labelsHidden()
-                        .accessibilityValue("\(model.count) slices")
+                        .accessibilityLabel("Decrease number of slices")
+                        .disabled(model.count <= 2)
 
-                        HStack {
-                            Text("2")
-                            Spacer()
-                            Text("\(SplitterEngine.maximumSlices)")
+                        VStack(spacing: PFSpacing.micro) {
+                            Slider(value: sliceCount, in: 2...Double(SplitterEngine.maximumSlices), step: 1) {
+                                Text("Number of slices")
+                            }
+                            .labelsHidden()
+                            .accessibilityValue("\(model.count) slices")
+
+                            HStack {
+                                Text("2")
+                                Spacer()
+                                Text("\(SplitterEngine.maximumSlices)")
+                            }
+                            .font(.caption2.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
                         }
-                        .font(.caption2.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                        .accessibilityHidden(true)
-                    }
 
-                    Button {
-                        model.count = min(SplitterEngine.maximumSlices, model.count + 1)
-                    } label: {
-                        Image(systemName: "plus")
-                            .frame(width: 18, height: 18)
+                        Button {
+                            model.count = min(SplitterEngine.maximumSlices, model.count + 1)
+                        } label: {
+                            Image(systemName: "plus")
+                                .frame(width: 18, height: 18)
+                        }
+                        .accessibilityLabel("Increase number of slices")
+                        .disabled(model.count >= SplitterEngine.maximumSlices)
                     }
-                    .accessibilityLabel("Increase number of slices")
-                    .disabled(model.count >= SplitterEngine.maximumSlices)
-                }
-                Text("Each part receives an equal share. Remainder pixels are distributed without cropping.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                InstagramSplitHint(parts: model.count)
-
-                Divider()
-                SectionHeading("Output Folder", number: 4)
-                FolderPickerRow(folder: model.outputFolder, placeholder: "Choose a folder", action: model.chooseOutput)
-                if let output = model.outputFolder {
-                    Text(output.path(percentEncoded: false))
-                        .font(.caption2)
+                    Text("Each part receives an equal share. Remainder pixels are distributed without cropping.")
+                        .font(.caption)
                         .foregroundStyle(.secondary)
-                        .lineLimit(2)
+                    splitRatioSummary
+                    InstagramSplitHint(parts: model.count)
+
+                    Divider()
+                    SectionHeading("Output Folder", number: 4)
+                    FolderPickerRow(folder: model.outputFolder, placeholder: "Choose a folder", action: model.chooseOutput)
+                    if let output = model.outputFolder {
+                        Text(output.path(percentEncoded: false))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    }
                 }
+                .padding(PFSpacing.micro)
             }
+            .scrollIndicators(.automatic)
         }
         .frame(width: PFLayout.inspectorWidth)
+        .frame(maxHeight: .infinity, alignment: .top)
     }
 
     private var actionBar: some View {
@@ -162,6 +168,57 @@ struct SplitterView: View {
                 .primaryActionHover()
             }
         }
+    }
+
+    @ViewBuilder private var splitRatioSummary: some View {
+        if let source = model.sourceDimensions {
+            VStack(alignment: .leading, spacing: PFSpacing.compact) {
+                ratioRow(label: "Source", value: source.summary)
+                if !model.partDimensions.isEmpty {
+                    ratioRow(label: model.orientation == .vertical ? "Each column" : "Each row", value: partRatioSummary)
+                }
+            }
+            .padding(PFSpacing.control)
+            .background(PFTheme.secondarySurface, in: RoundedRectangle(cornerRadius: PFRadius.control))
+            .overlay { RoundedRectangle(cornerRadius: PFRadius.control).stroke(PFTheme.border) }
+            .accessibilityElement(children: .combine)
+        }
+    }
+
+    private func ratioRow(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: PFSpacing.micro) {
+            Text(label)
+                .font(.caption.weight(.semibold))
+            Text(value)
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var partRatioSummary: String {
+        let parts = model.partDimensions
+        guard let first = parts.first else { return "Unavailable" }
+        guard !parts.allSatisfy({ $0 == first }) else { return first.summary }
+
+        let minimumWidth = parts.map(\.width).min() ?? first.width
+        let maximumWidth = parts.map(\.width).max() ?? first.width
+        let minimumHeight = parts.map(\.height).min() ?? first.height
+        let maximumHeight = parts.map(\.height).max() ?? first.height
+        let ratios = parts.map(\.ratio)
+        let minimumRatio = ratios.min() ?? first.ratio
+        let maximumRatio = ratios.max() ?? first.ratio
+        let minimumRatioText = formattedRatio(minimumRatio)
+        let maximumRatioText = formattedRatio(maximumRatio)
+        let ratioRange =
+            minimumRatioText == maximumRatioText
+            ? "ratio ≈\(minimumRatioText)"
+            : "ratio \(minimumRatioText)–\(maximumRatioText)"
+        return
+            "\(dimensionRange(minimumWidth, maximumWidth)) × \(dimensionRange(minimumHeight, maximumHeight)) px • \(ratioRange)"
+    }
+
+    private func dimensionRange(_ minimum: Int, _ maximum: Int) -> String {
+        minimum == maximum ? String(minimum) : "\(minimum)–\(maximum)"
     }
 
     private var actionTitle: String {

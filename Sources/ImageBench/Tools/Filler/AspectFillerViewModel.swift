@@ -43,24 +43,10 @@ final class AspectFillerViewModel: ObservableObject {
     }
 
     var sourceRatioDescription: String {
-        guard let sourceDimensions, sourceDimensions.width > 0, sourceDimensions.height > 0 else {
+        guard let sourceDimensions = sourceDimensions.flatMap(ImageDimensions.init(size:)) else {
             return "Add an image to see its current aspect ratio."
         }
-        let width = Int(sourceDimensions.width.rounded())
-        let height = Int(sourceDimensions.height.rounded())
-        let divisor = greatestCommonDivisor(width, height)
-        let ratio = Double(width) / Double(height)
-        return
-            "Current image: \(width) × \(height) • \(width / divisor):\(height / divisor) • \(ratio.formatted(.number.precision(.fractionLength(2))))"
-    }
-
-    private func greatestCommonDivisor(_ lhs: Int, _ rhs: Int) -> Int {
-        var a = abs(lhs)
-        var b = abs(rhs)
-        while b != 0 {
-            (a, b) = (b, a % b)
-        }
-        return max(1, a)
+        return "Current image: \(sourceDimensions.summary)"
     }
 
     func refreshPreview(debounced: Bool = false) {

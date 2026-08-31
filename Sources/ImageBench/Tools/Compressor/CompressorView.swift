@@ -192,8 +192,24 @@ struct CompressorView: View {
             HStack {
                 Text("Quality \(model.options.quality)").frame(width: 90, alignment: .leading)
                 Slider(
-                    value: Binding(get: { Double(model.options.quality) }, set: { model.options.quality = Int($0) }), in: 1...100, step: 1)
+                    value: Binding(get: { Double(model.options.quality) }, set: model.setCustomQuality),
+                    in: Double(CompressionOptions.customQualityRange.lowerBound)...Double(CompressionOptions.customQualityRange.upperBound),
+                    step: Double(CompressionOptions.customQualityStep)
+                ) {
+                    Text("JPEG quality")
+                }
+                .accessibilityValue("\(model.options.quality) out of 100")
             }
+            HStack {
+                Text("0")
+                Spacer()
+                Text("5-point steps")
+                Spacer()
+                Text("100")
+            }
+            .font(.caption2.monospacedDigit())
+            .foregroundStyle(.secondary)
+            .accessibilityHidden(true)
             Toggle("Progressive JPEG", isOn: $model.options.progressive)
             Toggle("Optimize Huffman tables", isOn: $model.options.optimize)
             Stepper(

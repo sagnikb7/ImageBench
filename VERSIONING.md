@@ -6,9 +6,9 @@ This document defines how ImageBench versions, build numbers, changelog entries,
 
 | Field | Current value | Source of truth |
 | --- | --- | --- |
-| Product version | `0.2.0` | `CFBundleShortVersionString` in `Packaging/Info.plist` |
-| SemVer equivalent | `0.2.0` | This policy and release tags |
-| Build number | `2` | `CFBundleVersion` in `Packaging/Info.plist` |
+| Product version | `0.3.0` | `CFBundleShortVersionString` in `Packaging/Info.plist` |
+| SemVer equivalent | `0.3.0` | This policy and release tags |
+| Build number | `3` | `CFBundleVersion` in `Packaging/Info.plist` |
 | Bundle identifier | `com.imagebench.imagetools` | `Packaging/Info.plist` |
 | Release status | Source release prepared; public binary signing pending | `CHANGELOG.md` and `ROADMAP.md` |
 
@@ -47,8 +47,8 @@ The About surface must display both values as `Version <product> (<build>)`.
 
 - Release tags use `vMAJOR.MINOR.PATCH`, for example `v0.2.0`.
 - Do not create or push a release tag until the release owner explicitly approves the release.
-- Architecture-specific artifacts use clear names such as `ImageBench-0.2.0-macos-arm64.zip` and `ImageBench-0.2.0-macos-x86_64.zip`.
-- A universal artifact, when supported, uses `ImageBench-0.2.0-macos-universal.zip`.
+- Architecture-specific artifacts use clear names such as `ImageBench-0.3.0-macos-arm64.zip` and `ImageBench-0.3.0-macos-x86_64.zip`.
+- A universal artifact, when supported, uses `ImageBench-0.3.0-macos-universal.zip`.
 - Published artifacts must come from the tagged commit and pass the release checklist in `DEVELOPMENT.md`.
 
 ## Changelog Policy

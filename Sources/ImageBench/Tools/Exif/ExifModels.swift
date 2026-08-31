@@ -44,6 +44,37 @@ struct ExifMetadataSection: Identifiable, Equatable {
     var id: String { title }
 }
 
+struct ExifCoordinate: Equatable {
+    let latitude: Double
+    let longitude: Double
+
+    init?(latitude: Double, longitude: Double) {
+        guard latitude.isFinite, longitude.isFinite,
+            (-90...90).contains(latitude), (-180...180).contains(longitude)
+        else { return nil }
+        self.latitude = latitude
+        self.longitude = longitude
+    }
+
+    var displayValue: String {
+        String(
+            format: "%.6f, %.6f",
+            locale: Locale(identifier: "en_US_POSIX"),
+            latitude,
+            longitude
+        )
+    }
+
+    var googleMapsURL: URL? {
+        var components = URLComponents(string: "https://www.google.com/maps/search/")
+        components?.queryItems = [
+            URLQueryItem(name: "api", value: "1"),
+            URLQueryItem(name: "query", value: displayValue),
+        ]
+        return components?.url
+    }
+}
+
 struct ExifHistogram: Equatable {
     let luminance: [Double]
     let red: [Double]
@@ -64,6 +95,7 @@ struct ExifInspection {
     let histogram: ExifHistogram
     let sections: [ExifMetadataSection]
     let isRAW: Bool
+    let coordinate: ExifCoordinate?
 
     var fieldCount: Int { sections.reduce(0) { $0 + $1.fields.count } }
 }

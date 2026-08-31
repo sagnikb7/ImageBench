@@ -44,6 +44,9 @@ enum MetadataPolicy: String, CaseIterable, Identifiable, Sendable {
 }
 
 struct CompressionOptions: Sendable {
+    static let customQualityRange = 0...100
+    static let customQualityStep = 5
+
     var quality = 82
     var progressive = true
     var optimize = true
@@ -72,6 +75,11 @@ struct CompressionOptions: Sendable {
         if quantTable > 0 { result += ["-quant-table", String(quantTable)] }
         if !sampling.isEmpty { result += ["-sample", sampling] }
         return result
+    }
+
+    static func normalizedCustomQuality(_ quality: Int) -> Int {
+        let clamped = min(customQualityRange.upperBound, max(customQualityRange.lowerBound, quality))
+        return Int((Double(clamped) / Double(customQualityStep)).rounded()) * customQualityStep
     }
 }
 

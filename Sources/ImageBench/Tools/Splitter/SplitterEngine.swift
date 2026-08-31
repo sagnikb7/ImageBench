@@ -27,18 +27,29 @@ enum SplitterError: LocalizedError, Equatable {
 enum SplitterEngine {
     static let maximumSlices = 12
 
+    static func partDimensions(
+        source: ImageDimensions,
+        orientation: SplitOrientation,
+        count: Int
+    ) throws -> [ImageDimensions] {
+        let availablePixels = orientation == .vertical ? source.width : source.height
+        let ranges = try sliceRanges(availablePixels: availablePixels, count: count)
+        return ranges.compactMap { range in
+            if orientation == .vertical {
+                ImageDimensions(width: range.count, height: source.height)
+            } else {
+                ImageDimensions(width: source.width, height: range.count)
+            }
+        }
+    }
+
     static func split(input: URL, outputFolder: URL, orientation: SplitOrientation, count: Int) throws -> [URL] {
         let image = try ImageRenderer.normalizedImage(at: input)
         let width = Int(image.extent.width.rounded(.down))
         let height = Int(image.extent.height.rounded(.down))
         guard width > 0, height > 0 else { throw ImageRendererError.decode }
         let availablePixels = orientation == .vertical ? width : height
-        guard count <= maximumSlices else {
-            throw SplitterError.sliceLimitExceeded(requested: count, maximum: maximumSlices)
-        }
-        guard count >= 2, count <= availablePixels else {
-            throw SplitterError.invalidSliceCount(requested: count, availablePixels: availablePixels)
-        }
+        let ranges = try sliceRanges(availablePixels: availablePixels, count: count)
         try FileManager.default.createDirectory(at: outputFolder, withIntermediateDirectories: true)
 
         let ext = input.pathExtension.lowercased()
@@ -50,17 +61,12 @@ enum SplitterEngine {
         for index in 0..<count {
             try Task.checkCancellation()
             let crop: CGRect
+            let range = ranges[index]
             if orientation == .vertical {
-                // Computing both boundaries from the full dimension distributes remainders
-                // without accumulating rounding error across slices.
-                let start = Int((Double(index) * Double(width) / Double(count)).rounded(.down))
-                let end = Int((Double(index + 1) * Double(width) / Double(count)).rounded(.down))
-                crop = CGRect(x: start, y: 0, width: max(1, end - start), height: height)
+                crop = CGRect(x: range.lowerBound, y: 0, width: range.count, height: height)
             } else {
-                let top = Int((Double(index) * Double(height) / Double(count)).rounded(.down))
-                let bottom = Int((Double(index + 1) * Double(height) / Double(count)).rounded(.down))
                 // Core Image's origin is bottom-left; user-facing row order is top-to-bottom.
-                crop = CGRect(x: 0, y: height - bottom, width: width, height: max(1, bottom - top))
+                crop = CGRect(x: 0, y: height - range.upperBound, width: width, height: range.count)
             }
             let part = image.cropped(to: crop).transformed(by: .init(translationX: -crop.minX, y: -crop.minY))
             let number = String(format: "%0*d", digits, index + 1)
@@ -71,4 +77,19 @@ enum SplitterEngine {
         return outputs
     }
 
+    private static func sliceRanges(availablePixels: Int, count: Int) throws -> [Range<Int>] {
+        guard count <= maximumSlices else {
+            throw SplitterError.sliceLimitExceeded(requested: count, maximum: maximumSlices)
+        }
+        guard count >= 2, count <= availablePixels else {
+            throw SplitterError.invalidSliceCount(requested: count, availablePixels: availablePixels)
+        }
+        return (0..<count).map { index in
+            // Computing both boundaries from the full dimension distributes remainders
+            // without accumulating rounding error across slices.
+            let start = Int((Double(index) * Double(availablePixels) / Double(count)).rounded(.down))
+            let end = Int((Double(index + 1) * Double(availablePixels) / Double(count)).rounded(.down))
+            return start..<end
+        }
+    }
 }

@@ -110,6 +110,13 @@ final class CompressorViewModel: ObservableObject {
     func selectPreset(_ newValue: CompressionPreset) {
         preset = newValue
         options.apply(newValue)
+        if newValue == .custom {
+            options.quality = CompressionOptions.normalizedCustomQuality(options.quality)
+        }
+    }
+
+    func setCustomQuality(_ quality: Double) {
+        options.quality = CompressionOptions.normalizedCustomQuality(Int(quality.rounded()))
     }
 
     var failedInputs: [URL] { batchResult?.failures.map(\.input) ?? [] }

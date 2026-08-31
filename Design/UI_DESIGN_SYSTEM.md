@@ -328,6 +328,7 @@ Voice is calm, direct, and specific.
 - Results precede command details.
 - Completed results compare the combined size of successful inputs with their output size using explicit Before and After labels, followed by the saved amount and percentage. Failed and skipped files are excluded so the comparison remains honest.
 - Metadata is a single policy picker, not overlapping checkboxes.
+- Custom quality uses a 0–100 native slider in five-point steps with visible endpoints; fixed presets keep their exact recipe values until the user chooses Custom.
 - Exact commands remain selectable and collapsed by default.
 - The full Command Details header row toggles the technical disclosure; activation is not limited to its chevron.
 
@@ -339,6 +340,7 @@ Voice is calm, direct, and specific.
 - Slice count uses a discrete native slider from 2–12, with a persistent numeric value, visible endpoints, and decrement/increment buttons for precise adjustment.
 - Slice count is limited to 12 in both the UI and engine; one slice is excluded because it performs no split.
 - Explain that remainder pixels are preserved.
+- Within Number of Slices, show the source dimensions, simplified ratio, and decimal ratio beside the resulting per-row or per-column geometry. If remainder pixels produce different part sizes, show an honest range instead of one misleading value.
 - Show the 16:10/two-part and 12:5/three-part preparation hints only when those slice counts are selected.
 
 ### Aspect Ratio Filler
@@ -374,6 +376,7 @@ Voice is calm, direct, and specific.
 - Present luminance, red, green, and blue together in a bounded log-scale histogram with a text legend so interpretation never relies on color alone.
 - Group metadata by user intent—File, Image, Capture, Camera & Lens, Exposure, Location, Rights & Workflow, and RAW & Maker Notes—instead of exposing ImageIO dictionary structure.
 - Keep values selectable, searchable by label or value, and read-only. Never imply that RAW recognition guarantees a preview when the installed macOS codec cannot decode that camera generation.
+- When valid GPS coordinates exist, keep their map actions within the Location metadata group beside the coordinate they act on. Keep the coordinate selectable, disclose that map services may connect to the internet, and never load a map until the user explicitly requests it.
 
 ## Do and Do Not
 
@@ -403,9 +406,9 @@ Do not:
 4. Implement with native controls and shared tokens.
 5. Exercise empty, ready, running, success, failure, cancellation, and disabled states as applicable.
 6. Verify Light and Dark appearances plus keyboard and VoiceOver semantics.
-7. Capture the changed screen at the standard window size.
+7. Capture the changed screen temporarily at the standard window size.
 8. Compare it with the selected concept and adjacent tools; fix P0/P1/P2 drift.
-9. Update `design-qa.md` and screenshots when a visible contract materially changes.
+9. Update the text record in `design-qa.md` when a visible contract materially changes. Do not commit generated screenshots unless the repository owner explicitly approves a durable reference.
 
 ## Pull-Request Checklist
 
@@ -450,5 +453,7 @@ Do not:
 - **2026-08-28 — EXIF information architecture:** the read-only EXIF Viewer uses the shared Preview/Inspector workspace, bounds histogram work, groups metadata by photographic intent, and treats installed macOS RAW codecs as the explicit capability boundary.
 - **2026-08-28 — Condensed editorial wordmark:** the approved option-2 identity replaces the rounded coral-split lettering with bundled bold Archivo Narrow, primary-color lettering, compact tracking, and one coral underscore. All module and control typography remains native San Francisco.
 - **2026-08-28 — Preference and preset ownership:** Settings owns durable startup preferences and global preset cleanup; Watermark Studio retains selected-slot reset beside the preset editor. Both destructive paths require confirmation.
+- **2026-09-01 — Explicit EXIF maps:** validated GPS coordinates may open a native MapKit sheet or Google Maps only through named user actions; ordinary metadata inspection remains local and does not preload map services.
+- **2026-09-01 — Legible image preparation controls:** Image Splitter compares source and per-part geometry from the export's exact slice boundaries, while Bulk Compressor's Custom quality uses a 0–100 scale in five-point steps without changing fixed preset recipes.
 
 Future design decisions should be appended here when they change a cross-screen rule. Screen-specific implementation notes belong beside the relevant view, not in this system document.

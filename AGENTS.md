@@ -179,7 +179,7 @@ UI evolution should begin with evidence and shared primitives:
 - support system, light, and dark appearances without duplicating screens;
 - keep controls native and keyboard/VoiceOver accessible;
 - preserve all engines and their tests while iterating on presentation;
-- update `design-qa.md` and its comparison evidence for meaningful visual changes;
+- update the text record in `design-qa.md` for meaningful visual changes; keep generated screenshots outside the repository unless the repository owner explicitly approves a durable reference;
 - add snapshot or focused UI tests as the visual system matures.
 
 For agentic UI work, use an audit → visual exploration → implementation → visual QA loop. Do not replace native SwiftUI/AppKit with Electron or a web view for styling convenience.
