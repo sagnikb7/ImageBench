@@ -20,7 +20,7 @@ For UI changes, attach before/after screenshots in light and dark appearance and
 
 ## Checklist
 
-- [ ] I read `AGENTS.md`, `CONTRIBUTING.md`, and the relevant documentation map entries.
+- [ ] I read `AGENTS.md`, `docs/CONTRIBUTING.md`, and the relevant `docs/README.md` entries.
 - [ ] Source images remain untouched and existing outputs are protected.
 - [ ] Offline behavior is preserved.
 - [ ] Long-running work remains asynchronous and cancellable.
@@ -29,5 +29,5 @@ For UI changes, attach before/after screenshots in light and dark appearance and
 - [ ] Release tests or bundle smoke tests were run when relevant.
 - [ ] Documentation is updated.
 - [ ] Qualifying changes are recorded under `CHANGELOG.md` **Unreleased**.
-- [ ] Version or build changes follow `VERSIONING.md`.
+- [ ] Version or build changes follow `docs/VERSIONING.md`.
 - [ ] I reviewed and understand any AI-generated changes.

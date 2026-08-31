@@ -107,7 +107,7 @@ There is no arbitrary line-count limit. Split a type when its responsibilities d
 
 ## SwiftUI
 
-- Follow `Design/UI_DESIGN_SYSTEM.md`.
+- Follow the [UI design system](../Design/UI_DESIGN_SYSTEM.md).
 - Keep processing logic out of `body` and view helpers.
 - Reuse shared workspace components for cross-tool structure.
 - Keep feature-specific controls local when they do not represent a stable shared concept.

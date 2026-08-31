@@ -1,6 +1,6 @@
 # ImageBench Developer Guide
 
-This guide explains how ImageBench is assembled, how its processing pipelines behave, and how to develop it safely. It complements the concise setup in `README.md` and the contribution rules in `CONTRIBUTING.md`.
+This guide explains how ImageBench is assembled, how its processing pipelines behave, and how to develop it safely. It complements the concise setup in the [project README](../README.md) and the [contribution rules](CONTRIBUTING.md).
 
 ## Technology
 
@@ -47,12 +47,14 @@ Sources/ImageBench/
 Tests/ImageBenchTests/
 Scripts/
 Packaging/Info.plist
+docs/
+Design/
 .github/workflows/ci.yml
 ```
 
 Views should be thin. View models coordinate tasks and state. Engines implement operations. Services own platform integration shared across tools.
 
-`CODE_STYLE.md` is the normative guide for dependency direction, module placement, naming, extraction decisions, comments, and source-quality automation.
+The [code quality guide](CODE_STYLE.md) is normative for dependency direction, module placement, naming, extraction decisions, comments, and source-quality automation.
 
 ## Application Structure
 
@@ -279,11 +281,11 @@ Core Image needs normal macOS rendering access for pixel assertions. A restricti
 
 ## UI Design and Visual QA
 
-The Gallery Workbench direction is implemented through semantic components in `Shared/DesignSystem.swift` and `Shared/WorkspaceComponents.swift`; tool views consume those tokens and layouts instead of defining isolated colors, cards, or workspace chrome. Its existing information architecture is a product constraint: visual work should refine contrast, alignment, controls, and density without replacing the established layout. `Design/UI_DESIGN_SYSTEM.md` is the normative guide for applying and extending those primitives. `SettingsView` persists System, Light, or Dark appearance, the startup module, and exposes confirmed watermark-preset cleanup. `AboutView` reads version/build metadata and bundled dependency versions without network access.
+The Gallery Workbench direction is implemented through semantic components in `Shared/DesignSystem.swift` and `Shared/WorkspaceComponents.swift`; tool views consume those tokens and layouts instead of defining isolated colors, cards, or workspace chrome. Its existing information architecture is a product constraint: visual work should refine contrast, alignment, controls, and density without replacing the established layout. The [UI design system](../Design/UI_DESIGN_SYSTEM.md) is the normative guide for applying and extending those primitives. `SettingsView` persists System, Light, or Dark appearance, the startup module, and exposes confirmed watermark-preset cleanup. `AboutView` reads version/build metadata and bundled dependency versions without network access.
 
 The flat coral photo-stack mark is shared by the sidebar, About surface, and packaged macOS icon. After changing that artwork, run `swift Scripts/generate-app-icon.swift` from the repository root to regenerate the SwiftPM resource and every asset-catalog size, then inspect both the 1,024-point source and the 16-point result before packaging.
 
-The selected long-lived visual concepts live under `Design/`; current verification conclusions live in `design-qa.md`. UI changes should repeat the audit → visual target → implementation → visual comparison loop, keeping generated screenshots outside the worktree unless the repository owner explicitly approves a durable reference.
+The selected long-lived visual concepts live under `Design/`; current verification conclusions live in [Design/UI_QA.md](../Design/UI_QA.md). UI changes should repeat the audit → visual target → implementation → visual comparison loop, keeping generated screenshots outside the worktree unless the repository owner explicitly approves a durable reference.
 
 For deterministic local screenshots, a development run can preload a photo folder and a synthetic mixed result state without modifying files:
 
@@ -337,7 +339,7 @@ The push/PR workflow needs no repository secrets because it produces test artifa
 5. Build the SwiftUI screen with native semantics and keyboard accessibility.
 6. Add the tool to `AppTool` and `ContentView`.
 7. Add generated-fixture unit and integration tests.
-8. Use the update matrix in `DOCUMENTATION.md`; record qualifying work under `CHANGELOG.md` **Unreleased**.
+8. Use the update matrix in the [documentation hub](README.md); record qualifying work under [CHANGELOG.md](../CHANGELOG.md) **Unreleased**.
 
 ## Debugging Common Failures
 
@@ -363,13 +365,13 @@ Check `otool -L` on bundled `cjpeg`; no Homebrew path should appear. Also verify
 
 ## Release Checklist
 
-- The release procedure and version choice follow `VERSIONING.md`.
+- The release procedure and version choice follow the [versioning policy](VERSIONING.md).
 - The release artifact is built from an identifiable reviewed commit, and the final tag points to that commit.
 - Debug and release tests pass.
 - The app is rebuilt after the final source change.
 - Bundle smoke test passes.
 - Version and build values in `Packaging/Info.plist` are correct.
-- The matching `CHANGELOG.md` section is dated and **Unreleased** is reset for future work.
+- The matching [CHANGELOG.md](../CHANGELOG.md) section is dated and **Unreleased** is reset for future work.
 - Dependency pins and archive checksums are intentional, documented, and verified before extraction.
 - The mixed-input compressor battle tests pass.
 - Visible UI changes have current screenshot comparison evidence.

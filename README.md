@@ -236,21 +236,23 @@ Sources/ImageBench/
 Tests/ImageBenchTests/  generated-fixture unit and integration tests
 Scripts/                dependency, test, packaging, and smoke-test scripts
 Packaging/Info.plist
+docs/                   contributor, engineering, release, and roadmap guides
+Design/                 UI design system, QA record, and selected visual reference
 .github/workflows/ci.yml
 ```
 
 ## Developer and Agent Documentation
 
-- [DOCUMENTATION.md](DOCUMENTATION.md): map of the documentation ecosystem, ownership, and update triggers
+- [Documentation hub](docs/README.md): task-based navigation, ownership, and update triggers
 - [AGENTS.md](AGENTS.md): repository rules and invariants for coding agents
-- [CODE_STYLE.md](CODE_STYLE.md): module boundaries, reuse rules, naming, comments, and automated code-quality checks
-- [DEVELOPMENT.md](DEVELOPMENT.md): architecture, pipelines, debugging, and releases
-- [CONTRIBUTING.md](CONTRIBUTING.md): contribution and AI-assisted-development guidance
+- [Code quality guide](docs/CODE_STYLE.md): module boundaries, reuse rules, naming, comments, and automated checks
+- [Developer guide](docs/DEVELOPMENT.md): architecture, pipelines, debugging, and releases
+- [Contributing guide](docs/CONTRIBUTING.md): contribution and AI-assisted-development guidance
 - [CHANGELOG.md](CHANGELOG.md): user-visible history and current Unreleased work
-- [VERSIONING.md](VERSIONING.md): product versions, build numbers, tags, artifacts, and release procedure
+- [Versioning policy](docs/VERSIONING.md): product versions, build numbers, tags, artifacts, and release procedure
 - [Design/UI_DESIGN_SYSTEM.md](Design/UI_DESIGN_SYSTEM.md): normative visual, interaction, accessibility, and content rules
-- [ROADMAP.md](ROADMAP.md): completed phases, distribution work, and future ideas
-- [design-qa.md](design-qa.md): current text-only visual and interaction verification record
+- [Roadmap](docs/ROADMAP.md): completed phases, distribution work, and future ideas
+- [Design/UI_QA.md](Design/UI_QA.md): current text-only visual and interaction verification record
 - [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md): bundled dependency versions and license notices
 
 The project explicitly welcomes responsible AI-assisted development. Contributors remain responsible for reviewing generated work, understanding it, protecting private data, and providing real verification evidence.
@@ -259,13 +261,13 @@ The Instagram preparation hints are derived mathematically: a 16:10 canvas split
 
 ## Contributing
 
-Bug reports, tests, accessibility improvements, performance work, documentation, and focused features are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md) before starting substantial work.
+Bug reports, tests, accessibility improvements, performance work, documentation, and focused features are welcome. Read the [contributing guide](docs/CONTRIBUTING.md) and [agent guide](AGENTS.md) before starting substantial work.
 
 GitHub Actions runs the debug suite, optimized suite, packaging process, and offline bundle smoke test for every push and pull request, then publishes versioned Apple Silicon and Intel test artifacts.
 
 ## Roadmap
 
-The native Gallery Workbench redesign is implemented. The next release work is to clear the CI, accessibility, hardware-validation, and signing/notarization gates recorded in [ROADMAP.md](ROADMAP.md).
+The native Gallery Workbench redesign is implemented. The next release work is to clear the CI, accessibility, hardware-validation, and signing/notarization gates recorded in the [roadmap](docs/ROADMAP.md).
 
 ## License
 

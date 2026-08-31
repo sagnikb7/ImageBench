@@ -20,25 +20,26 @@ The current product phase prioritizes correctness, operational stability, access
 
 Read these files before making substantial changes:
 
-1. `README.md` for product scope and quick-start instructions.
-2. `DOCUMENTATION.md` for the documentation map and update responsibilities.
-3. `DEVELOPMENT.md` for architecture, data flows, and release mechanics.
-4. `CONTRIBUTING.md` for contribution and AI-assisted-development expectations.
-5. `CHANGELOG.md` for shipped history and current Unreleased work.
-6. `VERSIONING.md` before changing bundle versions, builds, tags, or release artifacts.
-7. `ROADMAP.md` for product sequencing, release work, and future phases.
-8. `Design/UI_DESIGN_SYSTEM.md` before changing any user-facing interface.
-9. `CODE_STYLE.md` for module boundaries, naming, comments, reuse, and automated style checks.
+1. [README.md](README.md) for product scope and quick-start instructions.
+2. [docs/README.md](docs/README.md) for the documentation map and update responsibilities.
+3. [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for architecture, data flows, and release mechanics.
+4. [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution and AI-assisted-development expectations.
+5. [CHANGELOG.md](CHANGELOG.md) for shipped history and current Unreleased work.
+6. [docs/VERSIONING.md](docs/VERSIONING.md) before changing bundle versions, builds, tags, or release artifacts.
+7. [docs/ROADMAP.md](docs/ROADMAP.md) for product sequencing, release work, and future phases.
+8. [Design/UI_DESIGN_SYSTEM.md](Design/UI_DESIGN_SYSTEM.md) before changing any user-facing interface.
+9. [docs/CODE_STYLE.md](docs/CODE_STYLE.md) for module boundaries, naming, comments, reuse, and automated style checks.
 
 ## Documentation System
 
-`DOCUMENTATION.md` defines which file owns each kind of knowledge. Keep the ecosystem connected instead of duplicating policy across Markdown files.
+[docs/README.md](docs/README.md) defines which file owns each kind of knowledge. Keep the ecosystem connected instead of duplicating policy across Markdown files.
 
 - Add qualifying user-visible, performance, accessibility, packaging, or contributor-contract changes to the **Unreleased** section of `CHANGELOG.md`.
-- Follow `VERSIONING.md` whenever a version, build number, Git tag, artifact name, or release note changes.
+- Follow `docs/VERSIONING.md` whenever a version, build number, Git tag, artifact name, or release note changes.
 - Do not bump versions, create tags, or publish releases unless the user or release owner explicitly requests it.
-- Keep roadmap intent separate from changelog fact: planned work belongs in `ROADMAP.md`; completed outcomes belong in `CHANGELOG.md`.
-- Update `DOCUMENTATION.md` and the README documentation list when adding a long-lived Markdown guide.
+- Keep roadmap intent separate from changelog fact: planned work belongs in `docs/ROADMAP.md`; completed outcomes belong in `CHANGELOG.md`.
+- Put new engineering and contributor guides under `docs/`, design records under `Design/`, and keep the repository root limited to primary entry points, release history, and legal notices.
+- Update `docs/README.md` and the README documentation list when adding a long-lived Markdown guide.
 - Prefer links to the owning document over copied instructions that can drift.
 
 ## Ground-Truth Commands
@@ -179,7 +180,7 @@ UI evolution should begin with evidence and shared primitives:
 - support system, light, and dark appearances without duplicating screens;
 - keep controls native and keyboard/VoiceOver accessible;
 - preserve all engines and their tests while iterating on presentation;
-- update the text record in `design-qa.md` for meaningful visual changes; keep generated screenshots outside the repository unless the repository owner explicitly approves a durable reference;
+- update the text record in `Design/UI_QA.md` for meaningful visual changes; keep generated screenshots outside the repository unless the repository owner explicitly approves a durable reference;
 - add snapshot or focused UI tests as the visual system matures.
 
 For agentic UI work, use an audit → visual exploration → implementation → visual QA loop. Do not replace native SwiftUI/AppKit with Electron or a web view for styling convenience.

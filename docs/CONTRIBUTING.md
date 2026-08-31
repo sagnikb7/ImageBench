@@ -4,13 +4,13 @@ ImageBench welcomes human-written, AI-assisted, and agent-authored contributions
 
 ## Before You Start
 
-- Read `AGENTS.md`, `DOCUMENTATION.md`, and `DEVELOPMENT.md`.
-- Read `CODE_STYLE.md` before implementation or refactoring.
-- Read `CHANGELOG.md` and `VERSIONING.md` when a change is user-visible or release-related.
-- Read `Design/UI_DESIGN_SYSTEM.md` before changing user-facing UI.
+- Read the [agent guide](../AGENTS.md), [documentation map](README.md), and [developer guide](DEVELOPMENT.md).
+- Read the [code quality guide](CODE_STYLE.md) before implementation or refactoring.
+- Read the [changelog](../CHANGELOG.md) and [versioning policy](VERSIONING.md) when a change is user-visible or release-related.
+- Read the [UI design system](../Design/UI_DESIGN_SYSTEM.md) before changing user-facing UI.
 - Search existing issues and pull requests before opening overlapping work.
 - For significant behavior or architecture changes, open an issue describing the problem and proposed direction first.
-- Keep visual redesign work aligned with `ROADMAP.md` so the app gains one coherent design system rather than isolated styles.
+- Keep visual redesign work aligned with the [roadmap](ROADMAP.md) so the app gains one coherent design system rather than isolated styles.
 
 ## Development Setup
 
@@ -74,11 +74,11 @@ PR checklist:
 - [ ] Release tests pass for cross-cutting changes.
 - [ ] Packaging smoke test passes for dependency or release changes.
 - [ ] Documentation reflects changed contracts.
-- [ ] Qualifying user-visible work is recorded under `CHANGELOG.md` **Unreleased**.
-- [ ] Version metadata follows `VERSIONING.md`; no unrequested tag or release was created.
-- [ ] `Scripts/lint.sh` passes and new abstractions follow `CODE_STYLE.md`.
+- [ ] Qualifying user-visible work is recorded under [CHANGELOG.md](../CHANGELOG.md) **Unreleased**.
+- [ ] Version metadata follows the [versioning policy](VERSIONING.md); no unrequested tag or release was created.
+- [ ] `Scripts/lint.sh` passes and new abstractions follow the [code quality guide](CODE_STYLE.md).
 - [ ] UI changes support keyboard use, VoiceOver labels, contrast, and reduced motion.
-- [ ] UI changes follow `Design/UI_DESIGN_SYSTEM.md` and include visual comparison evidence when material.
+- [ ] UI changes follow the [UI design system](../Design/UI_DESIGN_SYSTEM.md) and include visual comparison evidence when material.
 
 ## AI-Assisted Contributions
 
@@ -91,7 +91,7 @@ AI tooling is encouraged when it helps contributors understand and improve the p
 - avoid pasting secrets, private photos, signing credentials, or user metadata into external models;
 - never ask an agent to disable a failing test without understanding the failure.
 
-A useful agent handoff contains the objective, affected files, constraints from `AGENTS.md`, test results, and remaining uncertainty.
+A useful agent handoff contains the objective, affected files, constraints from the [agent guide](../AGENTS.md), test results, and remaining uncertainty.
 
 ## Reporting Bugs
 

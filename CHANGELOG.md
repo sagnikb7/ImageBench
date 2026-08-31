@@ -1,10 +1,14 @@
 # Changelog
 
-All notable user-facing changes to ImageBench are recorded here. This file follows the structure of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the release rules in `VERSIONING.md`.
+All notable user-facing changes to ImageBench are recorded here. This file follows the structure of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the release rules in [docs/VERSIONING.md](docs/VERSIONING.md).
 
 Changes belong under **Unreleased** when they merge. A release moves those entries into a dated version section; do not rewrite previously published release history except to correct factual errors.
 
 ## Unreleased
+
+### Documentation
+
+- Consolidated contributor, engineering, release, and roadmap guides under a linked `docs/` hub, paired UI rules with their QA record under `Design/`, and reduced root-level Markdown clutter.
 
 ## 0.3.0 - 2026-09-01
 
@@ -67,8 +71,6 @@ ImageBench 0.2.0 adds the offline EXIF/RAW inspection workflow and completes the
 - Made Watermark Studio load a saved Preset 1 on initial entry and reset empty preset slots to a clean editor instead of carrying forward the previous preset.
 - Prevented a delayed clean-slate preview refresh from clearing the restored signature image after selecting a saved Watermark Studio preset.
 - Removed the remaining system-drawn sidebar shadow by replacing the material-backed navigation split column with a flat rail and hairline divider, while preserving sidebar toggling and its keyboard shortcut.
-
-### Performance
 
 ### Documentation
 

@@ -26,13 +26,13 @@ Completed hardening additions:
 - dependency, output-permission, and disk-space preflight;
 - 1,200-file scanner coverage and an opt-in 200-image compression benchmark;
 - atomic, cancellable single-image export with explicit source-overwrite protection;
-- MIT license, third-party notices, notarization automation, and a dual-architecture CI matrix.
+- MIT license, third-party notices, notarization automation, and a dual-architecture CI matrix;
 - versioned ImageBench artifacts built automatically on every GitHub push and pull request;
-- SHA-256 verification for both pinned dependency source archives.
+- SHA-256 verification for both pinned dependency source archives;
+- a traceable GitHub `main` baseline for the 0.3.0 source release.
 
 Remaining hardening candidates:
 
-- establish the first reviewed commit baseline so release artifacts can be traced to source;
 - observe the first GitHub Actions run and confirm both versioned architecture artifacts can be downloaded and opened;
 - test on a representative range of Intel and Apple Silicon Macs;
 - benchmark very large real-world camera files on representative Macs;
@@ -107,7 +107,7 @@ Implemented foundations:
 
 - connected README, agent, contributor, developer, design, changelog, versioning, and roadmap documentation;
 - GitHub issue and pull-request templates;
-- MIT license and bundled dependency notices.
+- MIT license and bundled dependency notices;
 - configured GitHub origin plus push/PR CI for Apple Silicon and Intel test artifacts.
 
 Remaining distribution work:

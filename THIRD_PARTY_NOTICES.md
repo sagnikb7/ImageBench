@@ -8,7 +8,7 @@ The ImageBench wordmark uses Archivo Narrow by Omnibus-Type. The font is distrib
 
 The app bundles the variable upright font and includes the complete license at `ImageBench.app/Contents/Resources/Licenses/ArchivoNarrow-OFL.txt`.
 
-Upstream: https://github.com/Omnibus-Type/ArchivoNarrow
+[Upstream source](https://github.com/Omnibus-Type/ArchivoNarrow)
 
 Pinned upstream commit: `9793ec77b6682a26bc7a6ed523ca65cc3cb90aec`
 
@@ -22,7 +22,7 @@ This software is based in part on the work of the Independent JPEG Group.
 
 The dependency build copies the upstream `LICENSE.md` into `Vendor/Tools/licenses/mozjpeg-LICENSE.md`, and the app packager includes it in `ImageBench.app/Contents/Resources/Licenses`.
 
-Upstream: https://github.com/mozilla/mozjpeg
+[Upstream source](https://github.com/mozilla/mozjpeg)
 
 Pinned source archive SHA-256: `9fcbb7171f6ac383f5b391175d6fb3acde5e64c4c4727274eade84ed0998fcc1`
 
@@ -32,7 +32,7 @@ ExifTool is copyright Phil Harvey. It is free software distributed under the sam
 
 The dependency build copies the upstream README containing its copyright and license statement into `Vendor/Tools/licenses/exiftool-README`, and the app packager includes it in `ImageBench.app/Contents/Resources/Licenses`.
 
-Upstream: https://exiftool.org/ and https://github.com/exiftool/exiftool
+Upstream: [ExifTool website](https://exiftool.org/) and [source repository](https://github.com/exiftool/exiftool)
 
 Pinned source archive SHA-256: `90ff1b1fa214215f30fa547a8f0d53e7355d995426e3102ef6c6020dd3efbb04`
 

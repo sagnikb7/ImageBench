@@ -18,7 +18,7 @@ Verification completed: Swift formatting and lint passed; all 111 debug and opti
 
 For a meaningful visual change:
 
-1. Inspect the existing screen and the normative rules in `Design/UI_DESIGN_SYSTEM.md`.
+1. Inspect the existing screen and the normative rules in [UI_DESIGN_SYSTEM.md](UI_DESIGN_SYSTEM.md).
 2. Exercise relevant empty, ready, running, success, failure, cancellation, and disabled states.
 3. Check the standard and minimum supported window sizes.
 4. Inspect System, Light, and Dark appearances plus Increase Contrast and Reduce Motion where relevant.

@@ -4,7 +4,7 @@ Status: normative
 
 Visual direction: Gallery Workbench (option 3)
 
-Last reviewed: 2026-08-28
+Last reviewed: 2026-09-01
 
 This document is the shared UI contract for ImageBench. It exists so contributors and coding agents can extend the app without inventing a new visual language on each screen.
 
@@ -15,7 +15,7 @@ Use it together with `Sources/ImageBench/Shared/DesignSystem.swift` and `Workspa
 When references disagree, resolve them in this order:
 
 1. Native macOS behavior, accessibility, and user safety.
-2. Tested product behavior and privacy invariants in `AGENTS.md`.
+2. Tested product behavior and privacy invariants in [AGENTS.md](../AGENTS.md).
 3. Semantic tokens and components in `Shared/DesignSystem.swift`.
 4. Rules and patterns in this document.
 5. The shipped Gallery Workbench screens and current user-provided screenshots.
@@ -400,7 +400,7 @@ Do not:
 
 ## UI Change Workflow
 
-1. Read this document, `AGENTS.md`, and the relevant existing view.
+1. Read this document, [AGENTS.md](../AGENTS.md), and the relevant existing view.
 2. Identify the existing layout and shared components that fit the task.
 3. If the change requires a new visual rule, propose and document the semantic rule before proliferating it.
 4. Implement with native controls and shared tokens.
@@ -408,7 +408,7 @@ Do not:
 6. Verify Light and Dark appearances plus keyboard and VoiceOver semantics.
 7. Capture the changed screen temporarily at the standard window size.
 8. Compare it with the selected concept and adjacent tools; fix P0/P1/P2 drift.
-9. Update the text record in `design-qa.md` when a visible contract materially changes. Do not commit generated screenshots unless the repository owner explicitly approves a durable reference.
+9. Update the text record in [UI_QA.md](UI_QA.md) when a visible contract materially changes. Do not commit generated screenshots unless the repository owner explicitly approves a durable reference.
 
 ## Pull-Request Checklist
 

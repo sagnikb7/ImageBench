@@ -6,11 +6,11 @@ This document defines how ImageBench versions, build numbers, changelog entries,
 
 | Field | Current value | Source of truth |
 | --- | --- | --- |
-| Product version | `0.3.0` | `CFBundleShortVersionString` in `Packaging/Info.plist` |
+| Product version | `0.3.0` | `CFBundleShortVersionString` in [Packaging/Info.plist](../Packaging/Info.plist) |
 | SemVer equivalent | `0.3.0` | This policy and release tags |
-| Build number | `3` | `CFBundleVersion` in `Packaging/Info.plist` |
-| Bundle identifier | `com.imagebench.imagetools` | `Packaging/Info.plist` |
-| Release status | Source release prepared; public binary signing pending | `CHANGELOG.md` and `ROADMAP.md` |
+| Build number | `3` | `CFBundleVersion` in [Packaging/Info.plist](../Packaging/Info.plist) |
+| Bundle identifier | `com.imagebench.imagetools` | [Packaging/Info.plist](../Packaging/Info.plist) |
+| Release status | Source release prepared; public binary signing pending | [CHANGELOG.md](../CHANGELOG.md) and [ROADMAP.md](ROADMAP.md) |
 
 Version `0.2.0` is the first ImageBench release to use the complete `MAJOR.MINOR.PATCH` form consistently in bundle metadata, changelog headings, artifacts, and future Git tags.
 
@@ -49,11 +49,11 @@ The About surface must display both values as `Version <product> (<build>)`.
 - Do not create or push a release tag until the release owner explicitly approves the release.
 - Architecture-specific artifacts use clear names such as `ImageBench-0.3.0-macos-arm64.zip` and `ImageBench-0.3.0-macos-x86_64.zip`.
 - A universal artifact, when supported, uses `ImageBench-0.3.0-macos-universal.zip`.
-- Published artifacts must come from the tagged commit and pass the release checklist in `DEVELOPMENT.md`.
+- Published artifacts must come from the tagged commit and pass the release checklist in the [developer guide](DEVELOPMENT.md).
 
 ## Changelog Policy
 
-`CHANGELOG.md` records user-visible history; commit messages and pull-request descriptions do not replace it.
+[CHANGELOG.md](../CHANGELOG.md) records user-visible history; commit messages and pull-request descriptions do not replace it.
 
 Add an **Unreleased** entry for:
 
@@ -70,8 +70,8 @@ Use the headings `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security
 ## Release Procedure
 
 1. Choose the version from the actual change set; do not infer it from elapsed time.
-2. Update `CFBundleShortVersionString` and increment `CFBundleVersion` in `Packaging/Info.plist`.
-3. Move relevant `CHANGELOG.md` entries from **Unreleased** into `## MAJOR.MINOR.PATCH - YYYY-MM-DD`.
+2. Update `CFBundleShortVersionString` and increment `CFBundleVersion` in [Packaging/Info.plist](../Packaging/Info.plist).
+3. Move relevant [CHANGELOG.md](../CHANGELOG.md) entries from **Unreleased** into `## MAJOR.MINOR.PATCH - YYYY-MM-DD`.
 4. Leave a fresh **Unreleased** section at the top.
 5. Update version references in README, release notes, issue templates, and migration documentation when relevant.
 6. Run the complete debug and optimized suites, package the app, and run the bundle smoke test.
@@ -92,6 +92,6 @@ codesign --verify --deep --strict --verbose=2 dist/ImageBench.app
 
 - A feature or fix does not authorize an agent to bump a version, create a tag, or publish a release unless the user explicitly requests it.
 - Agents update **Unreleased** when their change meets the changelog policy.
-- Release preparation must reconcile `Packaging/Info.plist`, `CHANGELOG.md`, release notes, artifact names, and the About surface.
+- Release preparation must reconcile [Packaging/Info.plist](../Packaging/Info.plist), [CHANGELOG.md](../CHANGELOG.md), release notes, artifact names, and the About surface.
 - Never rewrite a released version to make current work look complete; add a new entry or correction.
 - If version intent is ambiguous, keep the work under **Unreleased** and ask the release owner before changing bundle metadata.
