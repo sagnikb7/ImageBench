@@ -2,17 +2,14 @@
 
 ImageBench bundles the following third-party components in release applications. They run locally and are not contacted as network services.
 
-## Archivo Narrow
+## Fraunces and Figtree
 
-The ImageBench wordmark uses Archivo Narrow by Omnibus-Type. The font is distributed under the SIL Open Font License, Version 1.1.
+ImageBench uses Fraunces only for the wordmark and Figtree for interface headings and text. Both upright variable fonts are bundled locally under the SIL Open Font License 1.1, with no runtime font downloads.
 
-The app bundles the variable upright font and includes the complete license at `ImageBench.app/Contents/Resources/Licenses/ArchivoNarrow-OFL.txt`.
+- [Fraunces source](https://github.com/google/fonts/tree/main/ofl/fraunces): bundled as `Fraunces.ttf`; SHA-256 `177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb`.
+- [Figtree source](https://github.com/google/fonts/tree/main/ofl/figtree): bundled as `Figtree.ttf`; SHA-256 `26ad3db9b31ff7dde67a91ff515d022d2f495cd506590699cf264f0bfe6fb714`.
 
-[Upstream source](https://github.com/Omnibus-Type/ArchivoNarrow)
-
-Pinned upstream commit: `9793ec77b6682a26bc7a6ed523ca65cc3cb90aec`
-
-Bundled font SHA-256: `adbe027f625c8393ae0f6e174e32e233dda485bc3eda5153ce428275394ef97f`
+The complete licenses are included in `ImageBench.app/Contents/Resources/Licenses/Fraunces-OFL.txt` and `Figtree-OFL.txt`. Original copyright notices are retained in those files.
 
 ## mozjpeg 4.1.5
 

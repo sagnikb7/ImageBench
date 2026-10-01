@@ -10,65 +10,59 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: PFSpacing.card) {
-            SheetTitle(title: "Settings", subtitle: "Make the workspace feel right on your Mac.", dismiss: dismiss)
-            SurfaceCard {
-                VStack(alignment: .leading, spacing: PFSpacing.control) {
-                    SectionHeading("Appearance")
-                    Picker("Theme", selection: $appearance) {
-                        ForEach(AppearancePreference.allCases) { preference in
-                            Text(preference.rawValue).tag(preference)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    Text("System follows your Mac automatically. Light and Dark keep ImageBench in the selected appearance.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-            SurfaceCard {
-                VStack(alignment: .leading, spacing: PFSpacing.control) {
-                    SectionHeading("Startup")
-                    LabeledContent("Open ImageBench to") {
-                        Picker("Open ImageBench to", selection: $startupToolName) {
-                            ForEach(AppTool.allCases) { tool in
-                                Text(tool.rawValue).tag(tool.rawValue)
+            SheetTitle(title: "Settings", subtitle: "Choose how ImageBench opens and looks.", dismiss: dismiss)
+            ScrollView {
+                VStack(alignment: .leading, spacing: PFSpacing.card) {
+                    SurfaceCard {
+                        VStack(alignment: .leading, spacing: PFSpacing.control) {
+                            SectionHeading("Appearance")
+                            Picker("Theme", selection: $appearance) {
+                                ForEach(AppearancePreference.allCases) { preference in
+                                    Text(preference.rawValue).tag(preference)
+                                }
                             }
+                            .pickerStyle(.segmented)
+                            .labelsHidden()
+                            Text("System follows your Mac automatically. Light and Dark keep ImageBench in the selected appearance.")
+                                .font(BrandTypography.caption)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
-                        .labelsHidden()
-                        .frame(width: PFLayout.selectionFieldWidth)
                     }
-                    Text("The selected module opens first the next time ImageBench launches.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            SurfaceCard {
-                VStack(alignment: .leading, spacing: PFSpacing.control) {
-                    SectionHeading("Watermark Presets")
-                    Text("\(watermarkModel.presets.count) of 4 preset slots are saved in Application Support.")
-                        .foregroundStyle(.secondary)
-                    Button("Reset All Watermark Presets…", role: .destructive) {
-                        confirmsPresetReset = true
+                    SurfaceCard {
+                        VStack(alignment: .leading, spacing: PFSpacing.control) {
+                            SectionHeading("Startup")
+                            LabeledContent("Open ImageBench to") {
+                                Picker("Open ImageBench to", selection: $startupToolName) {
+                                    ForEach(AppTool.allCases) { tool in
+                                        Text(tool.rawValue).tag(tool.rawValue)
+                                    }
+                                }
+                                .labelsHidden()
+                                .frame(width: PFLayout.selectionFieldWidth)
+                            }
+                            Text("The selected module opens first the next time ImageBench launches.")
+                                .font(BrandTypography.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
-                    .disabled(watermarkModel.presets.isEmpty)
+                    SurfaceCard {
+                        VStack(alignment: .leading, spacing: PFSpacing.control) {
+                            SectionHeading("Watermark Presets")
+                            Text("\(watermarkModel.presets.count) of 4 preset slots are saved in Application Support.")
+                                .foregroundStyle(.secondary)
+                            Button("Reset All Watermark Presets…", role: .destructive) {
+                                confirmsPresetReset = true
+                            }
+                            .disabled(watermarkModel.presets.isEmpty)
+                        }
+                    }
                 }
+                .padding(4)
             }
-            SurfaceCard {
-                VStack(alignment: .leading, spacing: 8) {
-                    SectionHeading("Privacy")
-                    Label("All image processing stays on this Mac", systemImage: "lock.shield.fill")
-                        .foregroundStyle(PFTheme.success)
-                    Text("ImageBench has no analytics, ads, uploads, or runtime network calls. Original files are never modified.")
-                        .foregroundStyle(.secondary)
-                }
-            }
-            Spacer()
         }
         .padding(24)
-        .frame(width: 560)
-        .frame(minHeight: 600)
+        .frame(width: 560, height: 500)
         .confirmationDialog("Reset All Watermark Presets?", isPresented: $confirmsPresetReset, titleVisibility: .visible) {
             Button("Reset All Presets", role: .destructive) {
                 Task { await watermarkModel.resetAllPresets() }
@@ -88,48 +82,72 @@ struct AboutView: View {
     private let info = AppInfo.current
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(alignment: .leading, spacing: PFSpacing.card) {
             HStack {
                 Spacer()
                 SheetCloseButton(action: dismiss.callAsFunction)
             }
-            BrandIcon(size: 92)
-            VStack(spacing: 4) {
-                Text(info.name).font(.largeTitle.bold())
-                Text(info.versionLine).foregroundStyle(.secondary)
+            ScrollView {
+                VStack(alignment: .leading, spacing: PFSpacing.card) {
+                    VStack(spacing: PFSpacing.compact) {
+                        BrandIcon(size: 92)
+                        Text(info.name)
+                            .font(BrandTypography.largeTitle.bold())
+                            .accessibilityAddTraits(.isHeader)
+                        Text(info.versionLine)
+                            .font(BrandTypography.caption)
+                            .foregroundStyle(.secondary)
+                        Text("A private, offline image workbench for macOS.")
+                            .font(BrandTypography.headline)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.bottom, PFSpacing.compact)
+
+                    SurfaceCard {
+                        VStack(alignment: .leading, spacing: PFSpacing.control) {
+                            SectionHeading("Private by design")
+                            Text(
+                                "Processing stays on this Mac, and original images are never modified. ImageBench has no analytics, ads, or image uploads. External links and maps open only when you choose."
+                            )
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    SurfaceCard {
+                        VStack(alignment: .leading, spacing: PFSpacing.control) {
+                            SectionHeading("Open source")
+                            Text("ImageBench is free to use under the MIT License.")
+                                .foregroundStyle(.secondary)
+                            HStack(spacing: PFSpacing.section) {
+                                Link("View on GitHub", destination: AppInfo.repositoryURL)
+                                Link("Report an Issue", destination: AppInfo.issuesURL)
+                            }
+                            HStack(spacing: PFSpacing.section) {
+                                Button("License") { openResource("LICENSE", extension: nil) }
+                                Button("Third-Party Notices") { openResource("ThirdPartyNotices", extension: "md") }
+                            }
+                        }
+                    }
+                    SurfaceCard {
+                        VStack(alignment: .leading, spacing: PFSpacing.control) {
+                            SectionHeading("Bundled tools")
+                            StatusPill(
+                                icon: "checkmark.shield.fill",
+                                text: dependencies.isReady ? "Offline tools ready" : "Dependencies need attention",
+                                color: dependencies.isReady ? PFTheme.success : PFTheme.warning
+                            )
+                            Text("mozjpeg 4.1.5 • ExifTool 13.25")
+                                .font(BrandTypography.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .padding(4)
             }
-            .accessibilityElement(children: .combine)
-            .accessibilityAddTraits(.isHeader)
-            Text("A private, offline image workbench for macOS.")
-                .font(.headline)
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel("A private, offline image workbench for macOS.")
-            StatusPill(
-                icon: "checkmark.shield.fill", text: dependencies.isReady ? "Offline tools ready" : "Dependencies need attention",
-                color: dependencies.isReady ? PFTheme.success : PFTheme.warning
-            )
-            .accessibilityElement(children: .combine)
-            VStack(spacing: 4) {
-                Text("Bundled for release")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                Text("mozjpeg 4.1.5 • ExifTool 13.25")
-                    .font(.caption.monospaced())
-            }
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Bundled dependencies: mozjpeg 4.1.5, ExifTool 13.25")
-            HStack {
-                Button("Third-Party Notices") { openResource("ThirdPartyNotices", extension: "md") }
-                Button("License") { openResource("LICENSE", extension: nil) }
-            }
-            Text("Open source under the MIT License")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel("Open source under the MIT License")
         }
-        .padding(28)
-        .frame(width: 520, height: 500)
+        .padding(PFSpacing.screen)
+        .frame(width: 560, height: 620)
         .accessibilityElement(children: .contain)
     }
 
@@ -152,8 +170,8 @@ private struct SheetTitle: View {
     var body: some View {
         HStack(alignment: .top, spacing: PFSpacing.control) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(title).font(.title2.bold())
-                Text(subtitle).font(.subheadline).foregroundStyle(.secondary)
+                Text(title).font(BrandTypography.title2.bold())
+                Text(subtitle).font(BrandTypography.subheadline).foregroundStyle(.secondary)
             }
             Spacer()
             SheetCloseButton(action: dismiss.callAsFunction)

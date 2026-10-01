@@ -75,7 +75,7 @@ struct AspectFillerView: View {
             VStack(alignment: .leading, spacing: PFSpacing.card) {
                 SectionHeading("Canvas Ratio", number: 2)
                 Text(model.sourceRatioDescription)
-                    .font(.caption)
+                    .font(BrandTypography.caption)
                     .foregroundStyle(.secondary)
                 SelectionField(label: "Canvas ratio", value: model.preset.label, help: model.preset.help) {
                     ForEach(AspectPreset.allCases) { preset in
@@ -110,11 +110,11 @@ struct AspectFillerView: View {
                         ) {
                             VStack(spacing: PFSpacing.micro) {
                                 Image(systemName: icon(for: style))
-                                    .font(.title3)
+                                    .font(BrandTypography.title3)
                                     .foregroundStyle(model.fillStyle == style ? PFTheme.coral : .secondary)
                                     .accessibilityHidden(true)
                                 Text(style.rawValue)
-                                    .font(.caption.weight(.medium))
+                                    .font(BrandTypography.caption.weight(.medium))
                                     .lineLimit(2)
                                     .multilineTextAlignment(.center)
                             }
@@ -122,7 +122,7 @@ struct AspectFillerView: View {
                     }
                 }
                 Text(fillDescription)
-                    .font(.caption)
+                    .font(BrandTypography.caption)
                     .foregroundStyle(.secondary)
             }
         }

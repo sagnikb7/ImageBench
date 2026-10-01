@@ -112,7 +112,7 @@ struct SelectedImageRow: View {
     var body: some View {
         HStack {
             Label(input.lastPathComponent, systemImage: "photo.fill")
-                .font(.subheadline.weight(.medium))
+                .font(BrandTypography.subheadline.weight(.medium))
                 .lineLimit(1)
             Spacer()
             Button("Change…", action: change)
@@ -162,9 +162,9 @@ struct ImageDropPrompt: View {
                 .font(.system(size: 40, weight: .regular))
                 .foregroundStyle(PFTheme.coral)
                 .accessibilityHidden(true)
-            Text(title).font(.headline)
+            Text(title).font(BrandTypography.headline)
             Text(subtitle)
-                .font(.caption)
+                .font(BrandTypography.caption)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
@@ -196,9 +196,9 @@ struct ToolActionBar<Actions: View>: View {
     var body: some View {
         HStack(spacing: 14) {
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.subheadline.weight(.semibold))
+                Text(title).font(BrandTypography.subheadline.weight(.semibold))
                 Text(detail)
-                    .font(.caption)
+                    .font(BrandTypography.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
@@ -225,7 +225,7 @@ struct InstagramSplitHint: View {
     var body: some View {
         if let message {
             Label(message, systemImage: "lightbulb")
-                .font(.caption)
+                .font(BrandTypography.caption)
                 .foregroundStyle(.secondary)
                 .padding(PFSpacing.control)
                 .frame(maxWidth: .infinity, alignment: .leading)

@@ -6,9 +6,9 @@ ImageBench is a native, offline-first image utility for macOS. It combines bulk 
 
 The project is designed around a simple trust model: source images are never modified, outputs are never silently overwritten, processing remains available offline, and the exact external commands are visible to the user.
 
-ImageBench now includes the Gallery Workbench interface: a modern native workspace with semantic light/dark styling, drag-and-drop, richer previews, durable result summaries, Settings, and About surfaces. The processing core, offline packaging, and 111-test suite remain the source of truth for behavior.
+ImageBench now includes the Gallery Workbench interface: a modern native workspace with semantic light/dark styling, drag-and-drop, richer previews, durable result summaries, Settings, and About surfaces. The processing core, offline packaging, and 113-test suite remain the source of truth for behavior.
 
-Current source release: **0.3.0 (build 3)**.
+Current local release: **0.3.1 (build 4)**.
 
 ## Features
 
@@ -195,7 +195,7 @@ NOTARY_PROFILE=ImageBenchNotary Scripts/notarize-app.sh
 
 ## Automatic GitHub Builds
 
-Every push and pull request runs the complete GitHub Actions pipeline on Apple Silicon and Intel macOS 15 runners. Each job checks formatting, runs debug and optimized tests, packages the offline app, performs the real bundle smoke test, and uploads a ZIP named like `ImageBench-0.3.0-macos-arm64.zip` or `ImageBench-0.3.0-macos-x86_64.zip`.
+Every push and pull request runs the complete GitHub Actions pipeline on Apple Silicon and Intel macOS 15 runners. Each job checks formatting, runs debug and optimized tests, packages the offline app, performs the real bundle smoke test, and uploads a ZIP named like `ImageBench-0.3.1-macos-arm64.zip` or `ImageBench-0.3.1-macos-x86_64.zip`.
 
 To download a successful build:
 

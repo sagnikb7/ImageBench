@@ -100,7 +100,7 @@ struct ContentView: View {
             }
             .padding(10)
             Label("Private & offline", systemImage: "lock.shield")
-                .font(.caption2.weight(.medium))
+                .font(BrandTypography.caption2.weight(.medium))
                 .foregroundStyle(.secondary)
                 .help("All image processing stays on this Mac")
                 .padding(.horizontal, 18)
@@ -133,7 +133,7 @@ struct ContentView: View {
             }
         } label: {
             Label(tool.rawValue, systemImage: tool.icon)
-                .font(.body.weight(selection == tool ? .semibold : .regular))
+                .font(BrandTypography.body.weight(selection == tool ? .semibold : .regular))
                 .foregroundStyle(.primary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 11)

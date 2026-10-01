@@ -81,9 +81,9 @@ struct SplitterView: View {
                     SectionHeading("Number of Slices", number: 3)
                     HStack(alignment: .firstTextBaseline, spacing: PFSpacing.compact) {
                         Text("\(model.count)")
-                            .font(.title2.monospacedDigit().bold())
+                            .font(BrandTypography.title2.monospacedDigit().bold())
                         Text(model.count == 1 ? "slice" : "slices")
-                            .font(.subheadline)
+                            .font(BrandTypography.subheadline)
                             .foregroundStyle(.secondary)
                     }
                     HStack(spacing: PFSpacing.control) {
@@ -108,7 +108,7 @@ struct SplitterView: View {
                                 Spacer()
                                 Text("\(SplitterEngine.maximumSlices)")
                             }
-                            .font(.caption2.monospacedDigit())
+                            .font(BrandTypography.caption2.monospacedDigit())
                             .foregroundStyle(.secondary)
                             .accessibilityHidden(true)
                         }
@@ -123,7 +123,7 @@ struct SplitterView: View {
                         .disabled(model.count >= SplitterEngine.maximumSlices)
                     }
                     Text("Each part receives an equal share. Remainder pixels are distributed without cropping.")
-                        .font(.caption)
+                        .font(BrandTypography.caption)
                         .foregroundStyle(.secondary)
                     splitRatioSummary
                     InstagramSplitHint(parts: model.count)
@@ -133,7 +133,7 @@ struct SplitterView: View {
                     FolderPickerRow(folder: model.outputFolder, placeholder: "Choose a folder", action: model.chooseOutput)
                     if let output = model.outputFolder {
                         Text(output.path(percentEncoded: false))
-                            .font(.caption2)
+                            .font(BrandTypography.caption2)
                             .foregroundStyle(.secondary)
                             .lineLimit(2)
                     }
@@ -188,9 +188,9 @@ struct SplitterView: View {
     private func ratioRow(label: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: PFSpacing.micro) {
             Text(label)
-                .font(.caption.weight(.semibold))
+                .font(BrandTypography.caption.weight(.semibold))
             Text(value)
-                .font(.caption.monospacedDigit())
+                .font(BrandTypography.caption.monospacedDigit())
                 .foregroundStyle(.secondary)
         }
     }

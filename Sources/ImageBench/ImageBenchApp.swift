@@ -11,6 +11,7 @@ struct ImageBenchApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .font(BrandTypography.body)
                 .environmentObject(dependencies)
                 .frame(minWidth: PFLayout.minimumWindow.width, minHeight: PFLayout.minimumWindow.height)
                 .task { await dependencies.refreshAndBootstrapIfPossible() }

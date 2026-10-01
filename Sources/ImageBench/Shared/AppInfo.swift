@@ -1,6 +1,9 @@
 import Foundation
 
 struct AppInfo: Equatable, Sendable {
+    static let repositoryURL = URL(string: "https://github.com/sagnikb7/ImageBench")!
+    static let issuesURL = repositoryURL.appendingPathComponent("issues")
+
     let name: String
     let version: String
     let build: String

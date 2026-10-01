@@ -40,7 +40,8 @@ cp "$TOOLS_DIR/exiftool" "$APP_DIR/Contents/Resources/bin/exiftool"
 cp -R "$TOOLS_DIR/lib" "$APP_DIR/Contents/Resources/bin/lib"
 cp "$ROOT_DIR/THIRD_PARTY_NOTICES.md" "$APP_DIR/Contents/Resources/ThirdPartyNotices.md"
 cp "$ROOT_DIR/LICENSE" "$APP_DIR/Contents/Resources/LICENSE"
-cp "$ROOT_DIR/Sources/ImageBench/Resources/Licenses/ArchivoNarrow-OFL.txt" "$APP_DIR/Contents/Resources/Licenses/ArchivoNarrow-OFL.txt"
+cp "$ROOT_DIR/Sources/ImageBench/Resources/Licenses/Fraunces-OFL.txt" "$APP_DIR/Contents/Resources/Licenses/Fraunces-OFL.txt"
+cp "$ROOT_DIR/Sources/ImageBench/Resources/Licenses/Figtree-OFL.txt" "$APP_DIR/Contents/Resources/Licenses/Figtree-OFL.txt"
 if [[ -d "$TOOLS_DIR/licenses" ]]; then
     cp -R "$TOOLS_DIR/licenses/." "$APP_DIR/Contents/Resources/Licenses/"
 fi

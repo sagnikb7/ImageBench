@@ -100,23 +100,22 @@ struct ToolHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(title).font(.title2.weight(.bold))
-            Text(subtitle).font(.subheadline).foregroundStyle(.secondary)
+            Text(title).font(BrandTypography.title2.weight(.bold))
+            Text(subtitle).font(BrandTypography.subheadline).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
-/// Gives the product a distinct identity while keeping task typography native and quiet.
+/// The selected soft-serif identity, paired with quieter task typography.
 struct BrandWordmark: View {
     var body: some View {
-        (Text("ImageBench")
-            .foregroundColor(.primary)
-            + Text("_")
-            .font(BrandTypography.wordmarkFont)
-            .foregroundColor(PFTheme.coral))
+        Text("ImageBench")
+            .foregroundColor(PFTheme.coral)
             .font(BrandTypography.wordmarkFont)
             .tracking(-0.35)
+            .lineLimit(1)
+            .minimumScaleFactor(0.85)
             .accessibilityElement(children: .ignore)
             .accessibilityLabel("ImageBench")
     }
@@ -183,7 +182,7 @@ struct SectionHeading: View {
             if let number { Text("\(number).").foregroundStyle(PFTheme.coral) }
             Text(title)
         }
-        .font(.headline)
+        .font(BrandTypography.section)
         .accessibilityAddTraits(.isHeader)
     }
 }
@@ -195,7 +194,7 @@ struct StatusPill: View {
 
     var body: some View {
         Label(text, systemImage: icon)
-            .font(.caption.weight(.medium))
+            .font(BrandTypography.caption.weight(.medium))
             .foregroundStyle(color)
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
@@ -264,7 +263,7 @@ struct SelectionField<Items: View>: View {
                         .lineLimit(1)
                     Spacer(minLength: PFSpacing.compact)
                     Image(systemName: "chevron.down")
-                        .font(.caption2.weight(.semibold))
+                        .font(BrandTypography.caption2.weight(.semibold))
                         .foregroundStyle(.secondary)
                         .accessibilityHidden(true)
                 }
@@ -293,7 +292,7 @@ struct SelectionField<Items: View>: View {
             .accessibilityHint("Choose an option")
 
             Text(help)
-                .font(.caption)
+                .font(BrandTypography.caption)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -345,7 +344,7 @@ struct SelectableCardButton<Content: View>: View {
                 .overlay(alignment: .topTrailing) {
                     if isSelected {
                         Image(systemName: "checkmark.circle.fill")
-                            .font(.caption)
+                            .font(BrandTypography.caption)
                             .foregroundStyle(PFTheme.coral)
                             .padding(6)
                             .accessibilityHidden(true)
@@ -405,7 +404,7 @@ struct ResultMetric: View {
         } icon: {
             Image(systemName: icon).foregroundStyle(color)
         }
-        .font(.subheadline)
+        .font(BrandTypography.subheadline)
         .accessibilityLabel("\(value) \(label)")
     }
 }

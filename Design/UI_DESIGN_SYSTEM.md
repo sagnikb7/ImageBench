@@ -33,7 +33,7 @@ The interface should communicate:
 - **Local confidence:** processing, dependencies, destinations, and outcomes are explicit.
 - **Calm capability:** powerful operations are arranged as understandable steps.
 - **Photographic warmth:** coral identity accents add character without tinting the whole workspace.
-- **Mac familiarity:** system typography, SF Symbols, native controls, materials, focus behavior, and sheets remain recognizable.
+- **Mac familiarity:** readable semantic typography, SF Symbols, native controls, materials, focus behavior, and sheets remain recognizable.
 - **Operational honesty:** failures, skipped files, exact commands, and recovery actions are visible.
 
 Avoid excessive glass, ornamental gradients, neon effects, floating chat metaphors, oversized empty hero areas, and decorative controls that obscure the task.
@@ -97,18 +97,19 @@ Rules:
 
 ## Typography
 
-Use San Francisco through SwiftUI semantic styles for task and control typography. The explicitly approved sidebar product wordmark is the one display-font exception: it uses the bundled Archivo Narrow variable font at bold weight, compact tracking, and a short coral underscore while retaining “ImageBench” as one accessibility label. The font is registered from the app bundle and must never require a network request or a system installation.
+The interface reserves bundled Fraunces Bold for the coral wordmark only. Use bundled Figtree for module titles, sheet titles, numbered section headings, body text, navigation, captions, controls, and technical details. Workflow headings use restrained sans-serif weight and size for hierarchy, not decorative serifs. Use the shared `BrandTypography` semantic styles rather than local font literals. Watermark editing/export remains Arial: a hard limit of three app-owned text families, with just two used for interface design. Native macOS menus, dialogs, glyph fallback, and SF Symbols are platform-owned exceptions. Fonts register from the app bundle without a network request or system installation. Preserve native controls and accessibility semantics. The visual direction is simple, elegant, minimal, and usable; concentrate brand personality in the wordmark rather than adding decoration to workflow steps.
 
 | Purpose | Style |
 | --- | --- |
 | About/product identity | `.largeTitle.bold()` |
 | Tool title and prominent values | `.title2` with bold or semibold weight |
-| Numbered section title | `.headline` |
+| Numbered section title | `BrandTypography.section` (Figtree semibold) |
 | Standard control/body copy | `.body` |
 | Status and supporting hierarchy | `.subheadline` |
 | Help and consequence text | `.caption` |
 | Tertiary labels and paths | `.caption2` |
-| Commands, versions, numeric diagnostics | Monospaced design or `.monospacedDigit()` |
+| Commands and versions | `BrandTypography.caption` (Figtree) |
+| Numeric diagnostics | Figtree with `.monospacedDigit()` for tabular digits within the same family |
 
 Rules:
 
@@ -186,7 +187,7 @@ Do not place a divider beneath the header. Its title, subtitle, and bottom spaci
 
 ### `BrandWordmark`
 
-Use only for the persistent ImageBench identity in the sidebar. It uses bold Archivo Narrow in the primary text color with one coral underscore, exposes the product name as one accessibility label, and keeps coral as an identity accent rather than an action color. If registration fails, SwiftUI may fall back to a system face without preventing the app from launching.
+Use only for the persistent ImageBench identity in the sidebar. The current wordmark uses Fraunces Bold at 21 points in the logo's coral, without an underscore. It exposes the product name as one accessibility label and keeps coral as an identity accent rather than an action color. If registration fails, SwiftUI may fall back to a system face without preventing the app from launching.
 
 Pair it with the flat coral `SidebarBrandMark`. The same white photo-stack on coral artwork is used for the macOS app icon and About identity so the product has one recognizable mark at every scale. The sidebar uses an opaque `PFTheme.canvas` background and one semantic hairline divider; it must not use a material-backed split-view column, baked icon shadows, or resting elevation against the flat workspace.
 
@@ -326,9 +327,10 @@ Voice is calm, direct, and specific.
 - Workbench grid with source on the left and output/configuration on the right.
 - If the user does not choose a destination, show the planned `Compressed Output` folder beside the selected inputs; do not create it until compression starts.
 - Results precede command details.
-- Completed results compare the combined size of successful inputs with their output size using explicit Before and After labels, followed by the saved amount and percentage. Failed and skipped files are excluded so the comparison remains honest.
+- Completed results compare the combined size of successful inputs with their output size using explicit Before and After labels, followed by the saved amount and percentage. Failed and skipped files are excluded so the comparison remains honest. Present the comparison as one horizontal strip when room allows, and wrap it at compact widths or larger text sizes.
 - Metadata is a single policy picker, not overlapping checkboxes.
 - Custom quality uses a 0–100 native slider in five-point steps with visible endpoints; fixed presets keep their exact recipe values until the user chooses Custom.
+- Custom quantization table uses a native segmented picker for Default and tables 1–8. Keep the label beside the picker when it fits and above it when the inspector is narrow.
 - Exact commands remain selectable and collapsed by default.
 - The full Command Details header row toggles the technical disclosure; activation is not limited to its chevron.
 
@@ -413,7 +415,7 @@ Do not:
 ## Pull-Request Checklist
 
 - [ ] Reuses the established layout family.
-- [ ] Uses semantic colors and system typography.
+- [ ] Uses semantic colors and shared typography within the three-family limit.
 - [ ] Uses shared components or explains why a new one is required.
 - [ ] Primary action remains persistent and correctly enabled/disabled.
 - [ ] All relevant interaction states are understandable without color alone.

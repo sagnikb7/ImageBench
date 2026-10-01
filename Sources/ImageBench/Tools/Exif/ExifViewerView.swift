@@ -100,7 +100,7 @@ struct ExifViewerView: View {
                     SectionHeading("Histogram")
                     Spacer()
                     Text("Log scale")
-                        .font(.caption2)
+                        .font(BrandTypography.caption2)
                         .foregroundStyle(.tertiary)
                 }
                 HistogramPlot(histogram: model.inspection?.histogram ?? .empty)
@@ -111,7 +111,7 @@ struct ExifViewerView: View {
                     HistogramLegend(label: "Green", color: .green)
                     HistogramLegend(label: "Blue", color: .blue)
                 }
-                .font(.caption2)
+                .font(BrandTypography.caption2)
             }
         }
     }
@@ -131,13 +131,13 @@ struct ExifViewerView: View {
                             .foregroundStyle(PFTheme.coral)
                             .accessibilityHidden(true)
                         Text(model.inspection == nil ? "Metadata will appear here" : "No metadata matches this filter")
-                            .font(.headline)
+                            .font(BrandTypography.headline)
                         Text(
                             model.inspection == nil
                                 ? "ImageBench groups capture, camera, exposure, location, and RAW details locally."
                                 : "Try a camera model, exposure value, or field name."
                         )
-                        .font(.caption)
+                        .font(BrandTypography.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                     }
@@ -201,14 +201,14 @@ private struct LocationActionsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: PFSpacing.compact) {
             Label("Map this location", systemImage: "mappin.and.ellipse")
-                .font(.caption.weight(.semibold))
+                .font(BrandTypography.caption.weight(.semibold))
             HStack(spacing: PFSpacing.compact) {
                 Button("Show Map", action: showMap)
                 Button("Open in Google Maps…", action: openGoogleMaps)
             }
             .controlSize(.small)
             Text("Maps connect only when you choose one of these actions.")
-                .font(.caption2)
+                .font(BrandTypography.caption2)
                 .foregroundStyle(.tertiary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -237,9 +237,9 @@ private struct ExifMapSheet: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: PFSpacing.micro) {
                     Text("Photo Location")
-                        .font(.title2.bold())
+                        .font(BrandTypography.title2.bold())
                     Text(coordinate.displayValue)
-                        .font(.subheadline.monospacedDigit())
+                        .font(BrandTypography.subheadline.monospacedDigit())
                         .foregroundStyle(.secondary)
                         .textSelection(.enabled)
                 }
@@ -261,7 +261,7 @@ private struct ExifMapSheet: View {
 
             HStack(alignment: .center, spacing: PFSpacing.control) {
                 Label("Apple map tiles may use an internet connection.", systemImage: "network")
-                    .font(.caption)
+                    .font(BrandTypography.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button("Open in Google Maps…", action: openGoogleMaps)
@@ -284,7 +284,7 @@ private struct MetadataSectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: PFSpacing.compact) {
             Text(section.title)
-                .font(.headline)
+                .font(BrandTypography.headline)
                 .accessibilityAddTraits(.isHeader)
             ForEach(section.fields) { field in
                 LabeledContent {
@@ -295,7 +295,7 @@ private struct MetadataSectionView: View {
                 } label: {
                     Text(field.label)
                 }
-                .font(.caption)
+                .font(BrandTypography.caption)
             }
             if showsLocationActions {
                 LocationActionsView(showMap: showMap, openGoogleMaps: openGoogleMaps)

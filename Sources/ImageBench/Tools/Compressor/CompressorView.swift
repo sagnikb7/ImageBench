@@ -47,12 +47,12 @@ struct CompressorView: View {
                             .font(.system(size: 34, weight: .medium))
                             .foregroundStyle(PFTheme.coral)
                         Text(model.images.isEmpty ? "Add Photos" : model.selectionSummary)
-                            .font(.headline)
+                            .font(BrandTypography.headline)
                         Text(
                             model.images.isEmpty
                                 ? "Drop photos or a folder here" : model.inputFolder?.path(percentEncoded: false) ?? "Selected files"
                         )
-                        .font(.caption)
+                        .font(BrandTypography.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
@@ -70,7 +70,7 @@ struct CompressorView: View {
                 if !model.images.isEmpty {
                     HStack(spacing: PFSpacing.control) {
                         Label(model.selectionSummary, systemImage: "folder.fill")
-                            .font(.subheadline.weight(.medium))
+                            .font(BrandTypography.subheadline.weight(.medium))
                             .lineLimit(1)
                             .truncationMode(.tail)
                             .layoutPriority(1)
@@ -81,7 +81,7 @@ struct CompressorView: View {
                     thumbnailStrip
                 } else {
                     Text("JPEG, PNG, HEIC, HEIF, TIFF, BMP, GIF, and WebP")
-                        .font(.caption2)
+                        .font(BrandTypography.caption2)
                         .foregroundStyle(.tertiary)
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
@@ -117,7 +117,7 @@ struct CompressorView: View {
             }
             if hiddenCount > 0 {
                 Text("+\(hiddenCount.formatted())")
-                    .font(.caption.weight(.semibold))
+                    .font(BrandTypography.caption.weight(.semibold))
                     .frame(width: 58, height: 50)
                     .background(PFTheme.secondarySurface, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
             }
@@ -207,21 +207,45 @@ struct CompressorView: View {
                 Spacer()
                 Text("100")
             }
-            .font(.caption2.monospacedDigit())
+            .font(BrandTypography.caption2.monospacedDigit())
             .foregroundStyle(.secondary)
             .accessibilityHidden(true)
             Toggle("Progressive JPEG", isOn: $model.options.progressive)
             Toggle("Optimize Huffman tables", isOn: $model.options.optimize)
-            Stepper(
-                "Quantization table: \(model.options.quantTable == 0 ? "default" : String(model.options.quantTable))",
-                value: $model.options.quantTable, in: 0...8)
+            quantizationTablePicker
             Picker("Chroma sampling", selection: $model.options.sampling) {
                 Text("Default").tag(""); Text("4:4:4").tag("1x1"); Text("4:2:0").tag("2x2")
             }.pickerStyle(.segmented)
         }
-        .font(.caption)
+        .font(BrandTypography.caption)
         .padding(10)
         .background(PFTheme.secondarySurface.opacity(0.5), in: RoundedRectangle(cornerRadius: PFRadius.control))
+    }
+
+    private var quantizationTablePicker: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: PFSpacing.compact) {
+                Text("Quantization table")
+                quantizationTableSegments
+            }
+            .fixedSize(horizontal: true, vertical: false)
+            VStack(alignment: .leading, spacing: PFSpacing.compact) {
+                Text("Quantization table")
+                quantizationTableSegments
+            }
+        }
+    }
+
+    private var quantizationTableSegments: some View {
+        Picker("Quantization table", selection: $model.options.quantTable) {
+            Text("Default").tag(0)
+            ForEach(1...8, id: \.self) { table in
+                Text("\(table)").tag(table)
+            }
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+        .accessibilityLabel("Quantization table")
     }
 
     private var dependencyStatus: some View {
@@ -230,8 +254,8 @@ struct CompressorView: View {
                 .foregroundStyle(dependencies.isReady ? PFTheme.success : PFTheme.warning)
             VStack(alignment: .leading, spacing: 2) {
                 Text(dependencies.isReady ? "Ready to compress offline" : "Dependencies need attention")
-                    .font(.subheadline.weight(.semibold))
-                Text(dependencies.message).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+                    .font(BrandTypography.subheadline.weight(.semibold))
+                Text(dependencies.message).font(BrandTypography.caption).foregroundStyle(.secondary).lineLimit(2)
             }
             Spacer()
             if !dependencies.isReady {
@@ -272,10 +296,10 @@ struct CompressorView: View {
                             Text(failure.message).foregroundStyle(.secondary).lineLimit(1)
                             Spacer()
                         }
-                        .font(.caption)
+                        .font(BrandTypography.caption)
                     }
                     Button("Reveal Failed Files", action: model.revealFailures)
-                        .font(.caption)
+                        .font(BrandTypography.caption)
                 }
             }
         }
@@ -309,11 +333,11 @@ struct CompressorView: View {
             } label: {
                 HStack(spacing: PFSpacing.compact) {
                     Image(systemName: showsLog ? "chevron.down" : "chevron.right")
-                        .font(.caption.weight(.semibold))
+                        .font(BrandTypography.caption.weight(.semibold))
                         .frame(width: 12)
                         .accessibilityHidden(true)
                     Label("Command Details", systemImage: "terminal")
-                        .font(.subheadline.weight(.medium))
+                        .font(BrandTypography.subheadline.weight(.medium))
                     Spacer(minLength: 0)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -329,7 +353,7 @@ struct CompressorView: View {
             if showsLog {
                 Text(model.log.isEmpty ? "Exact commands and tool output will appear here." : model.log)
                     .textSelection(.enabled)
-                    .font(.system(.caption, design: .monospaced))
+                    .font(BrandTypography.caption)
                     .frame(maxWidth: .infinity, minHeight: 100, alignment: .topLeading)
                     .padding(12)
                     .background(Color.black.opacity(0.06), in: RoundedRectangle(cornerRadius: PFRadius.control))
@@ -424,21 +448,9 @@ private struct CompressionSizeSummary: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            Text("TOTAL SIZE")
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(.secondary)
-            HStack(alignment: .firstTextBaseline, spacing: PFSpacing.compact) {
-                sizeColumn(label: "Before", bytes: beforeBytes, emphasized: false)
-                Image(systemName: "arrow.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    .accessibilityHidden(true)
-                sizeColumn(label: "After", bytes: afterBytes, emphasized: true)
-            }
-            Label(changeDescription, systemImage: changeIcon)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(accent)
+        ViewThatFits(in: .horizontal) {
+            horizontalSummary
+            wrappedSummary
         }
         .padding(.horizontal, PFSpacing.control)
         .padding(.vertical, 10)
@@ -449,13 +461,62 @@ private struct CompressionSizeSummary: View {
         )
     }
 
-    private func sizeColumn(label: String, bytes: Int64, emphasized: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 1) {
+    private var horizontalSummary: some View {
+        HStack(spacing: PFSpacing.control) {
+            Text("TOTAL SIZE")
+                .font(BrandTypography.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+            Rectangle()
+                .fill(PFTheme.border)
+                .frame(width: 1, height: 22)
+                .accessibilityHidden(true)
+            HStack(alignment: .firstTextBaseline, spacing: PFSpacing.compact) {
+                sizePair(label: "Before", bytes: beforeBytes, emphasized: false)
+                Image(systemName: "arrow.right")
+                    .font(BrandTypography.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+                sizePair(label: "After", bytes: afterBytes, emphasized: true)
+            }
+            Rectangle()
+                .fill(PFTheme.border)
+                .frame(width: 1, height: 22)
+                .accessibilityHidden(true)
+            changeLabel
+        }
+        .fixedSize(horizontal: true, vertical: false)
+    }
+
+    private var wrappedSummary: some View {
+        VStack(alignment: .leading, spacing: PFSpacing.compact) {
+            Text("TOTAL SIZE")
+                .font(BrandTypography.caption2.weight(.semibold))
+                .foregroundStyle(.secondary)
+            HStack(alignment: .firstTextBaseline, spacing: PFSpacing.compact) {
+                sizePair(label: "Before", bytes: beforeBytes, emphasized: false)
+                Image(systemName: "arrow.right")
+                    .font(BrandTypography.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+                sizePair(label: "After", bytes: afterBytes, emphasized: true)
+            }
+            changeLabel
+        }
+    }
+
+    private var changeLabel: some View {
+        Label(changeDescription, systemImage: changeIcon)
+            .font(BrandTypography.caption.weight(.semibold))
+            .foregroundStyle(accent)
+    }
+
+    private func sizePair(label: String, bytes: Int64, emphasized: Bool) -> some View {
+        HStack(alignment: .firstTextBaseline, spacing: PFSpacing.micro) {
             Text(label)
-                .font(.caption2)
+                .font(BrandTypography.caption2)
                 .foregroundStyle(.secondary)
             Text(ByteCountFormatter.string(for: bytes))
-                .font(.subheadline.weight(emphasized ? .bold : .medium))
+                .font(BrandTypography.subheadline.weight(emphasized ? .bold : .medium))
                 .monospacedDigit()
         }
     }

@@ -2,6 +2,11 @@ import XCTest
 @testable import ImageBench
 
 final class AppInfoTests: XCTestCase {
+    func testProjectLinksUseTheOfficialHTTPSRepository() {
+        XCTAssertEqual(AppInfo.repositoryURL.absoluteString, "https://github.com/sagnikb7/ImageBench")
+        XCTAssertEqual(AppInfo.issuesURL.absoluteString, "https://github.com/sagnikb7/ImageBench/issues")
+    }
+
     func testReadsReleaseBundleValues() {
         let info = AppInfo(infoDictionary: [
             "CFBundleDisplayName": "ImageBench Preview",

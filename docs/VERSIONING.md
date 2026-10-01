@@ -6,11 +6,11 @@ This document defines how ImageBench versions, build numbers, changelog entries,
 
 | Field | Current value | Source of truth |
 | --- | --- | --- |
-| Product version | `0.3.0` | `CFBundleShortVersionString` in [Packaging/Info.plist](../Packaging/Info.plist) |
-| SemVer equivalent | `0.3.0` | This policy and release tags |
-| Build number | `3` | `CFBundleVersion` in [Packaging/Info.plist](../Packaging/Info.plist) |
+| Product version | `0.3.1` | `CFBundleShortVersionString` in [Packaging/Info.plist](../Packaging/Info.plist) |
+| SemVer equivalent | `0.3.1` | This policy and release tags |
+| Build number | `4` | `CFBundleVersion` in [Packaging/Info.plist](../Packaging/Info.plist) |
 | Bundle identifier | `com.imagebench.imagetools` | [Packaging/Info.plist](../Packaging/Info.plist) |
-| Release status | Source release prepared; public binary signing pending | [CHANGELOG.md](../CHANGELOG.md) and [ROADMAP.md](ROADMAP.md) |
+| Release status | Local app build installed in `/Applications`; public Developer ID signing and notarization pending | [CHANGELOG.md](../CHANGELOG.md) and [ROADMAP.md](ROADMAP.md) |
 
 Version `0.2.0` is the first ImageBench release to use the complete `MAJOR.MINOR.PATCH` form consistently in bundle metadata, changelog headings, artifacts, and future Git tags.
 
@@ -47,8 +47,8 @@ The About surface must display both values as `Version <product> (<build>)`.
 
 - Release tags use `vMAJOR.MINOR.PATCH`, for example `v0.2.0`.
 - Do not create or push a release tag until the release owner explicitly approves the release.
-- Architecture-specific artifacts use clear names such as `ImageBench-0.3.0-macos-arm64.zip` and `ImageBench-0.3.0-macos-x86_64.zip`.
-- A universal artifact, when supported, uses `ImageBench-0.3.0-macos-universal.zip`.
+- Architecture-specific artifacts use clear names such as `ImageBench-0.3.1-macos-arm64.zip` and `ImageBench-0.3.1-macos-x86_64.zip`.
+- A universal artifact, when supported, uses `ImageBench-0.3.1-macos-universal.zip`.
 - Published artifacts must come from the tagged commit and pass the release checklist in the [developer guide](DEVELOPMENT.md).
 
 ## Changelog Policy

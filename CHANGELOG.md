@@ -6,6 +6,18 @@ Changes belong under **Unreleased** when they merge. A release moves those entri
 
 ## Unreleased
 
+## 0.3.1 - 2026-10-01
+
+ImageBench 0.3.1 refines the native interface and organizes app information more clearly. Image processing and saved presets need no migration.
+
+### Changed
+
+- About now groups the GitHub repository, issue tracker, license, third-party notices, privacy details, and bundled-tool status. Settings contains only appearance, startup, and watermark-preset controls; both sheets scroll when needed.
+- Reduced the coral sidebar ImageBench wordmark slightly for a calmer balance with its icon.
+- Replaced the Custom compressor quantization stepper with a segmented choice for Default and tables 1–8.
+- Made the Bulk Compressor size comparison a compact horizontal strip at regular widths, with a readable wrapped layout when space is limited.
+- Refined the orange Fraunces wordmark and bundled Figtree interface typography. Watermark editing/export retains Arial. Removed the unused Archivo Narrow font and its license.
+
 ### Documentation
 
 - Consolidated contributor, engineering, release, and roadmap guides under a linked `docs/` hub, paired UI rules with their QA record under `Design/`, and reduced root-level Markdown clutter.

@@ -12,9 +12,17 @@ WORK_DIR="$(mktemp -d /tmp/imagebench-smoke.XXXXXX)"
 cleanup() { rm -rf "$WORK_DIR"; }
 trap cleanup EXIT
 
-for required in "$CONTENTS/Info.plist" "$CONTENTS/MacOS/ImageBench" "$CJPEG" "$EXIFTOOL" "$CONTENTS/Resources/AppIcon.icns" "$CONTENTS/Resources/Assets.car" "$CONTENTS/Resources/LICENSE" "$CONTENTS/Resources/ThirdPartyNotices.md" "$CONTENTS/Resources/Licenses/mozjpeg-LICENSE.md" "$CONTENTS/Resources/Licenses/exiftool-README" "$CONTENTS/Resources/Licenses/ArchivoNarrow-OFL.txt" "$CONTENTS/Resources/ImageBench_ImageBench.bundle/ArchivoNarrow[wght].ttf"; do
+for required in "$CONTENTS/Info.plist" "$CONTENTS/MacOS/ImageBench" "$CJPEG" "$EXIFTOOL" "$CONTENTS/Resources/AppIcon.icns" "$CONTENTS/Resources/Assets.car" "$CONTENTS/Resources/LICENSE" "$CONTENTS/Resources/ThirdPartyNotices.md" "$CONTENTS/Resources/Licenses/mozjpeg-LICENSE.md" "$CONTENTS/Resources/Licenses/exiftool-README"; do
     [[ -e "$required" ]] || { print -u2 "Missing bundle component: $required"; exit 1; }
 done
+
+for font in Fraunces Figtree; do
+    [[ -f "$CONTENTS/Resources/ImageBench_ImageBench.bundle/$font.ttf" ]] || { print -u2 "Missing bundled font: $font"; exit 1; }
+    [[ -f "$CONTENTS/Resources/Licenses/$font-OFL.txt" ]] || { print -u2 "Missing font license: $font"; exit 1; }
+done
+
+bundled_fonts=("$CONTENTS/Resources/ImageBench_ImageBench.bundle/"*.ttf(N))
+[[ ${#bundled_fonts} -eq 2 ]] || { print -u2 "Expected exactly two bundled UI fonts"; exit 1; }
 
 [[ -x "$CONTENTS/MacOS/ImageBench" ]] || { print -u2 "App executable is not executable"; exit 1; }
 [[ -x "$CJPEG" ]] || { print -u2 "Bundled cjpeg is not executable"; exit 1; }

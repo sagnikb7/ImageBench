@@ -81,7 +81,7 @@ struct WatermarkView: View {
                 if let input = model.input {
                     SelectedImageRow(input: input, change: model.chooseInput)
                     Label("Drag the watermark on the preview to place it.", systemImage: "arrow.up.and.down.and.arrow.left.and.right")
-                        .font(.caption)
+                        .font(BrandTypography.caption)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -121,7 +121,7 @@ struct WatermarkView: View {
                 }
             }
             Text("Export saves the current watermark, size, and position to the selected slot.")
-                .font(.caption)
+                .font(BrandTypography.caption)
                 .foregroundStyle(.secondary)
             HStack(spacing: PFSpacing.compact) {
                 Button("Reset Selected…", role: .destructive) { confirmsSelectedReset = true }
@@ -129,7 +129,7 @@ struct WatermarkView: View {
                 Button("Reset All…", role: .destructive) { confirmsAllReset = true }
                     .disabled(model.presets.isEmpty)
             }
-            .font(.caption)
+            .font(BrandTypography.caption)
         }
     }
 
@@ -157,7 +157,7 @@ struct WatermarkView: View {
             } else if let watermarkImageURL = model.watermarkImageURL {
                 SelectedImageRow(input: watermarkImageURL, change: model.chooseWatermarkImage)
                 Text("ImageBench keeps an app-managed copy when this preset is saved.")
-                    .font(.caption)
+                    .font(BrandTypography.caption)
                     .foregroundStyle(.secondary)
             } else {
                 Button("Choose Watermark Image…", action: model.chooseWatermarkImage)
@@ -176,7 +176,7 @@ struct WatermarkView: View {
                 .accessibilityLabel("Watermark opacity")
             HStack {
                 Text("Drag directly on the photo.")
-                    .font(.caption)
+                    .font(BrandTypography.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button("Center", action: model.centerWatermark)
@@ -236,9 +236,9 @@ private struct PresetSlotButton: View {
             action: action
         ) {
             VStack(spacing: 3) {
-                Text("\(slot)").font(.headline.monospacedDigit())
+                Text("\(slot)").font(BrandTypography.headline.monospacedDigit())
                 Text(isSaved ? "Saved" : "Empty")
-                    .font(.caption2)
+                    .font(BrandTypography.caption2)
                     .foregroundStyle(.secondary)
             }
         }
