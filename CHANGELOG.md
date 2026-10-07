@@ -6,6 +6,10 @@ Changes belong under **Unreleased** when they merge. A release moves those entri
 
 ## Unreleased
 
+### Changed
+
+- Bulk Compressor now creates a fresh `compressed_output`, `compressed_output_1`, etc. directory for each automatic export. Hidden ImageBench markers keep these directories out of future folder scans even after renaming; legacy `Compressed Output` folders remain excluded. Explicit destinations retain their current behavior.
+
 ## 0.3.1 - 2026-10-01
 
 ImageBench 0.3.1 refines the native interface and organizes app information more clearly. Image processing and saved presets need no migration.

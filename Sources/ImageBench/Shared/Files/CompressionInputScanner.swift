@@ -7,6 +7,8 @@ enum CompressionInputScanner {
     ]
 
     static func scan(folder: URL, excluding excludedFolders: [URL] = []) throws -> [URL] {
+        try Task.checkCancellation()
+        guard !CompressionOutputDirectory.isMarked(folder) else { return [] }
         let excludedPaths = Set(excludedFolders.map { $0.standardizedFileURL.path })
         let keys: Set<URLResourceKey> = [.isRegularFileKey, .isDirectoryKey, .isPackageKey, .fileSizeKey]
         guard
@@ -29,7 +31,9 @@ enum CompressionInputScanner {
                 enumerator.skipDescendants()
                 continue
             }
-            if values?.isDirectory == true, excludedPaths.contains(item.standardizedFileURL.path) {
+            if values?.isDirectory == true,
+                excludedPaths.contains(item.standardizedFileURL.path) || CompressionOutputDirectory.isMarked(item)
+            {
                 // Skipping descendants prevents prior exports from becoming inputs on a later scan.
                 enumerator.skipDescendants()
                 continue

@@ -25,6 +25,7 @@ Current local release: **0.3.1 (build 4)**.
 - Supports cancellation, retry-ready failed-file data, and failed partial-output cleanup
 - Preflights executable availability, output permissions, and disk headroom
 - Protects existing files with collision-safe output names
+- Separates automatic exports into `compressed_output`, `compressed_output_1`, and subsequent available folders; marked exports are excluded from folder scans
 
 ### Image Splitter
 

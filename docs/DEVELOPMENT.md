@@ -103,7 +103,7 @@ Metadata behavior is:
 
 The UI log shows the actual executable and arguments. The app does not execute a shell command string, so filenames containing spaces or quotes remain safe.
 
-When the user has not chosen a destination, the compressor derives a `Compressed Output` folder inside the current input folder. This is only a planned URL while selecting and scanning; changing the input moves the automatic destination, while an explicitly chosen destination is preserved. Before encoding, `CompressionPreflight` verifies the selected binaries, creates and write-probes the output folder, and checks conservative output and temporary-disk estimates. During a run, a per-file decode, encoder, or metadata failure is recorded and processing continues. Cancellation returns a partial `CompressionBatchResult`: completed files remain, the active partial output is removed, and untouched inputs are reported as skipped.
+When the user has not chosen a destination, the compressor plans the first available `compressed_output`, `compressed_output_1`, etc. folder inside the current input folder. Each run (including retry) exclusively reserves a new automatic directory and writes `.imagebench-compressed-output` before encoding. Failed preflight removes that reservation; completed or cancelled runs retain it. Explicit destinations keep their existing behavior and are not marked, since they may contain originals. This is only a planned URL while selecting and scanning; changing the input moves the automatic destination, while an explicitly chosen destination is preserved. Before encoding, `CompressionPreflight` verifies the selected binaries, creates and write-probes the output folder, and checks conservative output and temporary-disk estimates. During a run, a per-file decode, encoder, or metadata failure is recorded and processing continues. Cancellation returns a partial `CompressionBatchResult`: completed files remain, the active partial output is removed, and untouched inputs are reported as skipped.
 
 Fixed compressor presets retain their exact tested quality recipes. When the user enters Custom, the quality control normalizes to a 0–100 scale in five-point steps; this UI contract must not silently rewrite the archive, web, or maximum-compression preset values.
 
@@ -135,7 +135,7 @@ The release smoke test rejects a `cjpeg` linked to Homebrew paths. Do not packag
 
 ## Image Scanner
 
-`CompressionInputScanner` recursively finds JPEG/JPG, PNG, HEIC/HEIF, TIFF, BMP, GIF, and WebP files. It skips hidden files, package descendants, and the selected output directory. Excluding the output directory prevents a later scan from recompressing earlier results.
+`CompressionInputScanner` recursively finds JPEG/JPG, PNG, HEIC/HEIF, TIFF, BMP, GIF, and WebP files. It skips hidden files, package descendants, and the selected output directory. Marked automatic export directories are excluded, including when renamed or selected as the scan root. The view model also excludes the legacy `Compressed Output` child directory. Explicitly dropped image files remain available for intentional recompression. Excluding the output directory prevents a later scan from recompressing earlier results.
 
 The scanner is cancellation-aware and returns naturally sorted paths. If new formats are added, update `ImageFileSupport`, picker types, engine behavior, and scanner tests together.
 

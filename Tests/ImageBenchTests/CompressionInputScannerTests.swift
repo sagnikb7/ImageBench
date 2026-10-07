@@ -48,6 +48,30 @@ final class CompressionInputScannerTests: XCTestCase {
             try CompressionInputScanner.scan(folder: temp.url, excluding: [output]).map(\.standardizedFileURL), [input.standardizedFileURL])
     }
 
+    func testMarkedFoldersAreExcludedAfterRenameAndWhenSelectedDirectly() throws {
+        let temp = try TemporaryDirectory()
+        let output = temp.url.appendingPathComponent("Renamed export")
+        try FileManager.default.createDirectory(at: output, withIntermediateDirectories: false)
+        try Data().write(to: output.appendingPathComponent(".imagebench-compressed-output"))
+        try Data().write(to: output.appendingPathComponent("export.jpg"))
+        let original = temp.url.appendingPathComponent("original.jpg")
+        try Data().write(to: original)
+        XCTAssertEqual(try CompressionInputScanner.scan(folder: temp.url).map(\.standardizedFileURL), [original.standardizedFileURL])
+        XCTAssertTrue(try CompressionInputScanner.scan(folder: output).isEmpty)
+    }
+
+    func testUnmarkedFoldersWithOutputLikeNamesAreStillScanned() throws {
+        let temp = try TemporaryDirectory()
+        for name in ["compressed_output", "compressed_output_1", "Holiday"] {
+            let folder = temp.url.appendingPathComponent(name)
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false)
+            try Data().write(to: folder.appendingPathComponent("source.jpg"))
+        }
+        // Generic media markers must not hide originals from ImageBench.
+        try Data().write(to: temp.url.appendingPathComponent("Holiday/.nomedia"))
+        XCTAssertEqual(try CompressionInputScanner.scan(folder: temp.url).count, 3)
+    }
+
     func testCancellationIsObservedBeforeWalkingLargeTree() async throws {
         let temp = try TemporaryDirectory()
         try Data().write(to: temp.url.appendingPathComponent("image.jpg"))

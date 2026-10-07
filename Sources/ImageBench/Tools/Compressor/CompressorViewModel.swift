@@ -3,8 +3,6 @@ import Foundation
 
 @MainActor
 final class CompressorViewModel: ObservableObject {
-    private static let defaultOutputFolderName = "Compressed Output"
-
     @Published var inputFolder: URL?
     @Published var outputFolder: URL?
     @Published var images: [URL] = []
@@ -123,14 +121,27 @@ final class CompressorViewModel: ObservableObject {
 
     func start(cjpeg: URL?, exiftool: URL?, inputs overrideInputs: [URL]? = nil) {
         let selectedInputs = overrideInputs ?? images
-        guard let cjpeg, let outputFolder, !selectedInputs.isEmpty else { return }
+        guard !isRunning, let cjpeg, var outputFolder, !selectedInputs.isEmpty else { return }
+
+        var reservedFolder: URL?
+        if !isOutputFolderUserSelected, let inputFolder {
+            do {
+                outputFolder = try CompressionOutputDirectory.reserve(in: inputFolder)
+                reservedFolder = outputFolder
+            } catch {
+                resultMessage = "The output folder could not be prepared: \(error.localizedDescription)"
+                return
+            }
+        }
 
         let job = CompressionJob(inputs: selectedInputs, outputFolder: outputFolder, cjpeg: cjpeg, exiftool: exiftool, options: options)
         do { _ = try CompressionPreflight.run(job: job) } catch {
+            if let reservedFolder { try? FileManager.default.removeItem(at: reservedFolder) }
             resultMessage = error.localizedDescription
             appendLog("PREFLIGHT ERROR: \(error.localizedDescription)")
             return
         }
+        self.outputFolder = outputFolder
         isRunning = true
         progress = 0
         resetLog()
@@ -200,7 +211,9 @@ final class CompressorViewModel: ObservableObject {
         isScanning = true; images = []; totalBytes = 0
         task = Task {
             do {
-                let excluded = outputFolder.map { [$0] } ?? []
+                let excluded =
+                    (outputFolder.map { [$0] } ?? [])
+                    + [folder.appendingPathComponent("Compressed Output", isDirectory: true)]
                 let found = try await Task.detached(priority: .userInitiated) {
                     try CompressionInputScanner.scan(folder: folder, excluding: excluded)
                 }.value
@@ -238,7 +251,7 @@ final class CompressorViewModel: ObservableObject {
     }
 
     private static func defaultOutputFolder(for inputFolder: URL) -> URL {
-        inputFolder.appendingPathComponent(defaultOutputFolderName, isDirectory: true)
+        CompressionOutputDirectory.nextAvailable(in: inputFolder)
     }
 
     private func resetLog() {
