@@ -6,9 +6,79 @@ ImageBench is a native, offline-first image utility for macOS. It combines bulk 
 
 The project is designed around a simple trust model: source images are never modified, outputs are never silently overwritten, processing remains available offline, and the exact external commands are visible to the user.
 
-ImageBench now includes the Gallery Workbench interface: a modern native workspace with semantic light/dark styling, drag-and-drop, richer previews, durable result summaries, Settings, and About surfaces. The processing core, offline packaging, and 113-test suite remain the source of truth for behavior.
+ImageBench now includes the Gallery Workbench interface: a modern native workspace with semantic light/dark styling, drag-and-drop, richer previews, durable result summaries, Settings, and About surfaces. The processing core, offline packaging, and test suite remain the source of truth for behavior.
 
 Current local release: **0.3.1 (build 4)**.
+
+## Requirements
+
+- macOS 14 or newer
+- Full Xcode 16.3 or newer, including a compatible Swift 6.1+ toolchain; standalone Command Line Tools are insufficient for packaging and XCTest
+- CMake only when building the bundled mozjpeg dependency
+
+After installing Xcode, open it and finish setup. If macOS still selects Command Line Tools, run:
+
+```sh
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -runFirstLaunch
+xcrun --find actool
+```
+
+Adjust the path if Xcode is installed elsewhere.
+
+## Quick Start
+
+Clone the repository:
+
+```sh
+git clone git@github.com:sagnikb7/ImageBench.git
+cd ImageBench
+```
+
+Open `Package.swift` in Xcode, select the **ImageBench** executable scheme and **My Mac**, then run.
+
+From Terminal:
+
+```sh
+swift test --disable-sandbox
+swift run
+```
+
+A development run can discover Homebrew's keg-specific mozjpeg and ExifTool paths. For deterministic integration tests and release packaging, fetch the pinned tools:
+
+```sh
+Scripts/fetch-dependencies.sh
+```
+
+## Build the Offline App
+
+```sh
+Scripts/package-app.sh
+open dist/ImageBench.app
+```
+
+Packaging checks Xcode setup before building or downloading dependencies. It builds and smoke-tests a temporary bundle before replacing `dist/ImageBench.app`, so a failed build preserves the previous app. It does not install into `/Applications`.
+
+The packager:
+
+1. builds static mozjpeg for the current architecture;
+2. bundles ExifTool and its Perl modules;
+3. builds the optimized ImageBench executable;
+4. assembles a native `.app` bundle;
+5. signs it with an ad-hoc or supplied Developer ID identity.
+
+For Developer ID signing:
+
+```sh
+SIGNING_IDENTITY="Developer ID Application: Your Company (TEAMID)" Scripts/package-app.sh
+```
+
+Public binary distribution also requires notarization using the release owner's Apple credentials:
+
+```sh
+xcrun notarytool store-credentials ImageBenchNotary
+NOTARY_PROFILE=ImageBenchNotary Scripts/notarize-app.sh
+```
 
 ## Features
 
@@ -87,40 +157,9 @@ AppKit is used where SwiftUI intentionally delegates to macOS, including `NSOpen
 
 Development and release packaging may use the network once to fetch pinned dependency source archives. The resulting `.app` is self-contained.
 
-## Requirements
-
-- macOS 14 or newer
-- Xcode 16.3 or a newer compatible Swift 6.1 toolchain
-- Xcode Command Line Tools
-- CMake only when building the bundled mozjpeg dependency
-
-## Quick Start
-
-Clone the repository:
-
-```sh
-git clone git@github.com:sagnikb7/ImageBench.git
-cd ImageBench
-```
-
-Open `Package.swift` in Xcode, select the **ImageBench** executable scheme and **My Mac**, then run.
-
-From Terminal:
-
-```sh
-swift test --disable-sandbox
-swift run
-```
-
-A development run can discover Homebrew's keg-specific mozjpeg and ExifTool paths. For deterministic integration tests and release packaging, fetch the pinned tools:
-
-```sh
-Scripts/fetch-dependencies.sh
-```
-
 ## Testing
 
-ImageBench currently has 111 XCTest cases covering:
+ImageBench has XCTest coverage for:
 
 - preset-to-CLI contracts;
 - real mozjpeg JPEG encoding;
@@ -164,35 +203,6 @@ Scripts/run-benchmarks.sh
 ```
 
 `Scripts/test-all.sh` fetches missing pinned integration tools, runs debug and optimized tests, packages the app, verifies its signature and dependency linkage, and performs an actual encode using the bundled mozjpeg binary.
-
-## Build the Offline App
-
-```sh
-Scripts/package-app.sh
-Scripts/smoke-test-app.sh
-open dist/ImageBench.app
-```
-
-The packager:
-
-1. builds static mozjpeg for the current architecture;
-2. bundles ExifTool and its Perl modules;
-3. builds the optimized ImageBench executable;
-4. assembles a native `.app` bundle;
-5. signs it with an ad-hoc or supplied Developer ID identity.
-
-For Developer ID signing:
-
-```sh
-SIGNING_IDENTITY="Developer ID Application: Your Company (TEAMID)" Scripts/package-app.sh
-```
-
-Public binary distribution also requires notarization using the release owner's Apple credentials:
-
-```sh
-xcrun notarytool store-credentials ImageBenchNotary
-NOTARY_PROFILE=ImageBenchNotary Scripts/notarize-app.sh
-```
 
 ## Automatic GitHub Builds
 

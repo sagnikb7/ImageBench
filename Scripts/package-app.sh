@@ -3,10 +3,27 @@ set -euo pipefail
 
 ROOT_DIR="${0:A:h:h}"
 OUTPUT_DIR="${1:-$ROOT_DIR/dist}"
-APP_DIR="$OUTPUT_DIR/ImageBench.app"
+FINAL_APP_DIR="$OUTPUT_DIR/ImageBench.app"
 TOOLS_DIR="$ROOT_DIR/Vendor/Tools"
 ARCH_NAME="$(uname -m)"
 SIGNING_IDENTITY="${SIGNING_IDENTITY:--}"
+
+# Fail before fetching dependencies or touching an existing app bundle.
+if ! xcrun --find actool >/dev/null 2>&1 || ! xcodebuild -version >/dev/null 2>&1; then
+    print -u2 "Full Xcode is required to package ImageBench; Command Line Tools alone are insufficient."
+    print -u2 "Install and open Xcode, then run:"
+    print -u2 "  sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer"
+    print -u2 "  sudo xcodebuild -runFirstLaunch"
+    exit 1
+fi
+if ! xcodebuild -checkFirstLaunchStatus >/dev/null 2>&1; then
+    print -u2 "Finish Xcode setup first: sudo xcodebuild -runFirstLaunch"
+    exit 1
+fi
+for tool in swift codesign; do
+    xcrun --find "$tool" >/dev/null || { print -u2 "Required build tool is unavailable: $tool"; exit 1; }
+done
+print "Packaging preflight passed."
 
 if [[ ! -x "$TOOLS_DIR/$ARCH_NAME/cjpeg" || ! -x "$TOOLS_DIR/exiftool" || ! -d "$TOOLS_DIR/lib" || ! -f "$TOOLS_DIR/licenses/mozjpeg-LICENSE.md" || ! -f "$TOOLS_DIR/licenses/exiftool-README" ]]; then
     print "Packaged dependencies are absent; fetching and building them now."
@@ -19,7 +36,19 @@ SWIFTPM_MODULECACHE_OVERRIDE="${TMPDIR:-/tmp}/imagebench-swiftpm-cache" \
 swift build -c release --disable-sandbox --package-path "$ROOT_DIR"
 
 BIN_DIR="$(swift build -c release --show-bin-path --disable-sandbox --package-path "$ROOT_DIR")"
-rm -rf "$APP_DIR"
+mkdir -p "$OUTPUT_DIR"
+STAGING_DIR="$(mktemp -d "$OUTPUT_DIR/.imagebench-package.XXXXXX")"
+APP_DIR="$STAGING_DIR/ImageBench.app"
+cleanup() {
+    if [[ -d "$STAGING_DIR/previous.app" && ! -e "$FINAL_APP_DIR" ]]; then
+        mv "$STAGING_DIR/previous.app" "$FINAL_APP_DIR" || {
+            print -u2 "Could not restore previous app; retained at $STAGING_DIR/previous.app"
+            return 1
+        }
+    fi
+    rm -rf "$STAGING_DIR"
+}
+trap cleanup EXIT
 mkdir -p "$APP_DIR/Contents/MacOS" "$APP_DIR/Contents/Resources/bin/$ARCH_NAME" "$APP_DIR/Contents/Resources/Licenses"
 cp "$ROOT_DIR/Packaging/Info.plist" "$APP_DIR/Contents/Info.plist"
 cp "$BIN_DIR/ImageBench" "$APP_DIR/Contents/MacOS/ImageBench"
@@ -50,4 +79,9 @@ chmod 755 "$APP_DIR/Contents/MacOS/ImageBench" "$APP_DIR/Contents/Resources/bin/
 print "Signing with identity: $SIGNING_IDENTITY"
 codesign --force --deep --options runtime --sign "$SIGNING_IDENTITY" "$APP_DIR"
 codesign --verify --deep --strict "$APP_DIR"
-print "Created $APP_DIR"
+"$ROOT_DIR/Scripts/smoke-test-app.sh" "$APP_DIR"
+if [[ -e "$FINAL_APP_DIR" ]]; then
+    mv "$FINAL_APP_DIR" "$STAGING_DIR/previous.app"
+fi
+mv "$APP_DIR" "$FINAL_APP_DIR"
+print "Created $FINAL_APP_DIR"

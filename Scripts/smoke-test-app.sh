@@ -16,12 +16,17 @@ for required in "$CONTENTS/Info.plist" "$CONTENTS/MacOS/ImageBench" "$CJPEG" "$E
     [[ -e "$required" ]] || { print -u2 "Missing bundle component: $required"; exit 1; }
 done
 
+# SwiftPM native and Swift Build use flat and macOS-style resource bundles respectively.
+FONT_DIR="$CONTENTS/Resources/ImageBench_ImageBench.bundle"
+if [[ -d "$FONT_DIR/Contents/Resources" ]]; then
+    FONT_DIR="$FONT_DIR/Contents/Resources"
+fi
 for font in Fraunces Figtree; do
-    [[ -f "$CONTENTS/Resources/ImageBench_ImageBench.bundle/$font.ttf" ]] || { print -u2 "Missing bundled font: $font"; exit 1; }
+    [[ -f "$FONT_DIR/$font.ttf" ]] || { print -u2 "Missing bundled font: $font"; exit 1; }
     [[ -f "$CONTENTS/Resources/Licenses/$font-OFL.txt" ]] || { print -u2 "Missing font license: $font"; exit 1; }
 done
 
-bundled_fonts=("$CONTENTS/Resources/ImageBench_ImageBench.bundle/"*.ttf(N))
+bundled_fonts=("$FONT_DIR/"*.ttf(N))
 [[ ${#bundled_fonts} -eq 2 ]] || { print -u2 "Expected exactly two bundled UI fonts"; exit 1; }
 
 [[ -x "$CONTENTS/MacOS/ImageBench" ]] || { print -u2 "App executable is not executable"; exit 1; }

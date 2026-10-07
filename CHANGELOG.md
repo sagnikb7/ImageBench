@@ -8,6 +8,8 @@ Changes belong under **Unreleased** when they merge. A release moves those entri
 
 ### Changed
 
+- Packaging now checks full Xcode setup before work begins and verifies a staged app before replacing the previous bundle. Bundle smoke tests support both SwiftPM resource layouts; build/setup instructions now appear near the top of the README.
+
 - Bulk Compressor now creates a fresh `compressed_output`, `compressed_output_1`, etc. directory for each automatic export. Hidden ImageBench markers keep these directories out of future folder scans even after renaming; legacy `Compressed Output` folders remain excluded. Explicit destinations retain their current behavior.
 
 ## 0.3.1 - 2026-10-01

@@ -129,7 +129,7 @@ Release behavior prefers deterministic app-owned tools:
 3. Homebrew's keg-specific paths for development;
 4. limited PATH-style fallbacks where applicable.
 
-`Scripts/fetch-dependencies.sh` builds a static mozjpeg executable for the current architecture and copies the pinned ExifTool script plus Perl modules. `Scripts/package-app.sh` embeds them in the app and signs the bundle.
+`Scripts/fetch-dependencies.sh` builds a static mozjpeg executable for the current architecture and copies the pinned ExifTool script plus Perl modules. `Scripts/package-app.sh` first checks full Xcode and first-launch setup, then embeds them in a temporary app and signs the bundle. It smoke-tests that staged app before replacing the previous output; failures preserve the previous bundle. The smoke test accepts both flat and macOS-style SwiftPM resource bundles.
 
 The release smoke test rejects a `cjpeg` linked to Homebrew paths. Do not package `/opt/homebrew/opt/mozjpeg/bin/cjpeg` directly; its dependent libraries will not exist on another Mac.
 

@@ -34,14 +34,14 @@ jobs:
         run: Scripts/fetch-dependencies.sh
       - name: Check source style
         run: Scripts/lint.sh
+      - name: Check packaging preflight
+        run: Scripts/test-package-preflight.sh
       - name: Run debug tests
         run: swift test --disable-sandbox
       - name: Run optimized tests
         run: swift test -c release --disable-sandbox
       - name: Package offline app
         run: Scripts/package-app.sh
-      - name: Smoke-test app bundle
-        run: Scripts/smoke-test-app.sh
       - name: Archive app bundle
         id: archive
         run: |

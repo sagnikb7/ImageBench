@@ -16,6 +16,8 @@ export SWIFTPM_MODULECACHE_OVERRIDE="${TMPDIR:-/tmp}/imagebench-swiftpm-cache"
 print "Checking source style…"
 "$ROOT_DIR/Scripts/lint.sh"
 
+"$ROOT_DIR/Scripts/test-package-preflight.sh"
+
 print "Running debug tests…"
 swift test --disable-sandbox --package-path "$ROOT_DIR"
 
@@ -24,6 +26,5 @@ swift test -c release --disable-sandbox --package-path "$ROOT_DIR"
 
 print "Packaging and smoke-testing the offline app…"
 "$ROOT_DIR/Scripts/package-app.sh"
-"$ROOT_DIR/Scripts/smoke-test-app.sh"
 
 print "All ImageBench verification passed."
